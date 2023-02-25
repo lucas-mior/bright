@@ -1,0 +1,30 @@
+.TH bright 1 bright\-VERSION
+.SH NAME
+bright \- Change screen brightness and print to stdout.
+.SH SYNOPSIS
+.B bright
+.RB [ \-+ ]
+.SH DESCRIPTION
+bright is a program to change the screen brightness and print the current value of brightness to stdout.
+.P
+To do so, it has to read and write the corresponding file.
+Please note, that in order to do this you must have the right permissions.
+.SH USAGE
+.TP
+.BI "\-"
+Decrease screen brightness, and then print to stdout.
+.TP
+.B "+"
+Increase screen brightness, and then print to stdout.
+.TP
+.B
+Without arguments, just print current brightness.
+.SH CONFIGURATION
+Edit `bright.c` and recompile.
+.SH AUTHOR
+.EX
+Lucas Mior   <lucas.mior at tutamail.com>
+.EE
+.SH SEE ALSO
+.BR X (7),
+.BR xrdb (1)
