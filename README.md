@@ -15,7 +15,7 @@ if <s> is set, send $BRIGHT signal to <s>.
 Edit `bright.c` and recompile.
 
 ## Environment variables
-- `$BRIGHT` - Which signal number should be send to <program>
+- `$BRIGHT` - Which signal number should be send to \<s\>
 
 ## Installation
 ```
