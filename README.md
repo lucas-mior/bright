@@ -2,12 +2,15 @@
 Change screen brightness and print to stdout.
 
 ## Usage
-bright [ -+hp ]
-- : Decrease screen brightness, and then print to stdout.
-+ : Increase screen brightness, and then print to stdout.
-h : Print usage
-p : Print current brightness to stdout
-Without arguments, also print current brightness.
+```
+$ bright h
+usage: bright [+-hp] <s> 
++ : decrease brightness 
+- : increase brightness 
+h : show this help message 
+p : print current brightness 
+if <s> is set, signal dwmblocks. 
+```
 
 ## Configuration
 Edit `bright.c` and recompile.
