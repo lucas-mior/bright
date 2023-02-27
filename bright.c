@@ -24,7 +24,7 @@
 #include <limits.h>
 #include <math.h>
 
-#include "sig_dwmblocks.h"
+#include "send_signal.h"
 
 typedef struct Brightness {
     char file[256];
@@ -130,20 +130,20 @@ void usage(FILE *stream) {
     fprintf(stream, "%c : increase brightness\n", decrease);
     fprintf(stream, "%c : show this help message\n", help);
     fprintf(stream, "%c : print current brightness\n", print);
-    fprintf(stream, "if <s> is set, signal dwmblocks.\n");
+    fprintf(stream, "if <s> is set, send $BRIGHT signal to <s>.\n");
     exit((int) (stream != stdout));
     return;
 }
 
 int main(int argc, char *argv[]) {
-    bool sig_dwmblocks = false;
+    char *prog_to_sig = NULL;
     Command c;
     switch (argc) {
     case 1: 
         c = print;
         break;
     case 3:
-        sig_dwmblocks = true;
+        prog_to_sig = argv[2];
         __attribute__((fallthrough));
     case 2:
         c = argv[1][0];
@@ -198,8 +198,8 @@ int main(int argc, char *argv[]) {
     save_new(&new_bright, &old_bright);
     printf("🔆 %i\n", new_bright.index);
 
-    if (sig_dwmblocks)
-        signal_dwmblocks();
+    if (prog_to_sig)
+        send_signal(prog_to_sig);
 
     return 0;
 }

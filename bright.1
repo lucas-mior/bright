@@ -1,11 +1,12 @@
 .TH bright 1 bright\-0.1
 .SH NAME
-bright \- Change screen brightness and print to stdout.
+bright \- Change screen brightness, print to stdout and signal program.
 .SH SYNOPSIS
 .B bright
-.RB [ \-+hp ]
+.RB [ \-+hp ] <program>
 .SH DESCRIPTION
-bright is a program to change the screen brightness and print the current value of brightness to stdout.
+bright is a program to change the screen brightness and print the current value of brightness to stdout,
+and optionally signal another program.
 .P
 To do so, it has to read and write the corresponding file.
 Please note, that in order to do this you must have the right permissions.
@@ -18,15 +19,22 @@ Decrease screen brightness, and then print to stdout.
 Increase screen brightness, and then print to stdout.
 .TP
 .BI "h"
-Print usage, and then print to stdout
+Print usage, and then print to stdout.
 .TP
 .BI "p"
 Print current brightness.
 .TP
 .B
 Without arguments, also print current brightness.
+.TP
+.BI "<program>"
+If <program> is set, bright will send $BRIGHT signal do the program named <program>.
 .SH CONFIGURATION
 Edit `bright.c` and recompile.
+.SH ENVIRONMENT VARIABLES
+.TP
+.BI "$BRIGHT"
+Which signal number should be send to <program>
 .SH AUTHOR
 .EX
 Lucas Mior   <lucas.mior at tutamail.com>

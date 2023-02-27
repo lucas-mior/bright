@@ -9,7 +9,7 @@ cflags = -std=gnu99 -Wall -Wextra -pedantic $(CFLAGS)
 
 ldlibs = $(LDLIBS)
 
-objs = bright.o sig_dwmblocks.o
+objs = bright.o send_signal.o
 
 all: bright
 
@@ -19,10 +19,10 @@ all: bright
 
 bear: Makefile
 	bear -- make > compile_commands.json
-$(objs): Makefile sig_dwmblocks.h
+$(objs): Makefile send_signal.h
 
-bright.o: sig_dwmblocks.h
-sig_dwmblocks.o: sig_dwmblocks.h
+bright.o: send_signal.h
+sig_dwmblocks.o: send_signal.h
 
 .c.o:
 	$(CC) -O2 $(cflags) $(cppflags) -lm -c -o $@ $<
