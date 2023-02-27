@@ -1,5 +1,5 @@
 # bright
-Change screen brightness and print to stdout.
+Change screen brightness, print to stdout and signal another program.
 
 ## Usage
 ```
