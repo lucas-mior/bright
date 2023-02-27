@@ -14,6 +14,9 @@ if <s> is set, send $BRIGHT signal to <s>.
 ## Configuration
 Edit `bright.c` and recompile.
 
+## Environment variables
+- `$BRIGHT` - Which signal number should be send to <program>
+
 ## Installation
 ```
 $ git clone https://github.com/lucas-mior/bright
