@@ -24,11 +24,6 @@
 
 #include "send_signal.h"
 
-typedef union Number {
-    char *str;
-    int num;
-} Number;
-
 pid_t check_pid(char *progname, char *name) {
     int pid;
     static char pid_stat[256];
@@ -65,20 +60,10 @@ pid_t check_pid(char *progname, char *name) {
     return 0;
 }
 
-void send_signal(char *progname) {
-    Number bright;
+void send_signal(char *progname, int signum) {
     DIR *proc_dir;
     struct dirent *proc_dirent;
     pid_t pid;
-
-    if (!(bright.str = getenv("BRIGHT"))) {
-        fprintf(stderr, "BRIGHT environment variable not set.\n");
-        return;
-    }
-    if ((bright.num = atoi(bright.str)) < 10) {
-        fprintf(stderr, "Invalid BRIGHT environment variable.\n");
-        return;
-    }
 
     if (!(proc_dir = opendir("/proc"))) {
         fprintf(stderr, "Error opening /proc: %s\n", strerror(errno));
@@ -87,7 +72,7 @@ void send_signal(char *progname) {
 
     while ((proc_dirent = readdir(proc_dir))) {
         if ((pid = check_pid(progname, proc_dirent->d_name))) {
-            kill(pid, SIGRTMIN+bright.num);
+            kill(pid, SIGRTMIN+signum);
             break;
         }
     }

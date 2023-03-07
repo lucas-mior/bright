@@ -17,6 +17,6 @@
 #ifndef SEND_SIGNAL_H
 #define SEND_SIGNAL_H
 
-void send_signal(char *);
+void send_signal(char *, int);
 
 #endif /* SEND_SIGNAL_H */

@@ -33,6 +33,11 @@ typedef struct Brightness {
     int index;
 } Brightness;
 
+typedef union Number {
+    char *str;
+    int num;
+} Number;
+
 #define NLEVELS 11
 static int levels[NLEVELS];
 static const char *bright_dir = "/sys/class/backlight/intel_backlight";
@@ -198,8 +203,19 @@ int main(int argc, char *argv[]) {
     save_new(&new_bright, &old_bright);
     printf("🔆 %i\n", new_bright.index);
 
-    if (prog_to_sig)
-        send_signal(prog_to_sig);
+    if (prog_to_sig) {
+        Number bright;
+        if (!(bright.str = getenv("BRIGHT"))) {
+            fprintf(stderr, "BRIGHT environment variable not set.\n");
+            return 0;
+        }
+        if ((bright.num = atoi(bright.str)) < 10) {
+            fprintf(stderr, "Invalid BRIGHT environment variable.\n");
+            return 0;
+        }
+
+        send_signal(prog_to_sig, bright.num);
+    }
 
     return 0;
 }
