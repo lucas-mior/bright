@@ -71,10 +71,8 @@ void send_signal(char *progname, int signum) {
     }
 
     while ((proc_dirent = readdir(proc_dir))) {
-        if ((pid = check_pid(progname, proc_dirent->d_name))) {
+        if ((pid = check_pid(progname, proc_dirent->d_name)))
             kill(pid, SIGRTMIN+signum);
-            break;
-        }
     }
 
     closedir(proc_dir);
