@@ -130,7 +130,8 @@ typedef enum Command {
 } Command;
 
 void usage(FILE *stream) {
-    fprintf(stream, "usage: bright [%c%c%c%c] <s>\n", increase, decrease, help, print);
+    fprintf(stream, "usage: bright [%c%c%c%c] <s>\n", 
+                    increase, decrease, help, print);
     fprintf(stream, "%c : decrease brightness\n", increase);
     fprintf(stream, "%c : increase brightness\n", decrease);
     fprintf(stream, "%c : show this help message\n", help);
