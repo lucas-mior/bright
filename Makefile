@@ -29,8 +29,6 @@ sig_dwmblocks.o: send_signal.h
 
 bright: $(objs)
 	$(CC) -O2 $(cflags) $(LDFLAGS) -lm -o $@ $(objs) $(ldlibs)
-	ctags --kinds-C=+l *.h *.c
-	vtags.sed tags > .tags.vim
 
 clean:
 	rm -f *.o bright
