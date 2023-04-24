@@ -24,57 +24,60 @@
 
 #include "send_signal.h"
 
-pid_t check_pid(char *progname, char *name) {
-    int pid;
-    static char pid_stat[256];
+static pid_t check_pid(char *, char*);
+
+pid_t check_pid(char *executable, char *number) {
     static char buffer[256];
-    char *pbuf;
-    FILE *stat_file;
+    int pid;
+    FILE *stat;
+    char *command;
 
-    if ((pid = atoi(name)) <= 0)
+    if ((pid = atoi(number)) <= 0)
         return 0;
 
-    snprintf(pid_stat, sizeof(pid_stat), "/proc/%s/stat", name);
-    pid_stat[255] = '\0';
-    if (!(stat_file = fopen(pid_stat, "r"))) {
-        fprintf(stderr, "Error opening %s: %s\n", pid_stat, strerror(errno));
+    snprintf(buffer, sizeof(buffer), "/proc/%s/stat", number);
+    buffer[255] = '\0';
+    if (!(stat = fopen(buffer, "r"))) {
+        fprintf(stderr, "Error opening %s: %s\n", buffer, strerror(errno));
         return 0;
     }
-    if (!(pbuf = fgets(buffer, sizeof(buffer), stat_file))) {
-        fprintf(stderr, "Error reading %s: %s\n", pid_stat, strerror(errno));
+    if (!fgets(buffer, sizeof(buffer), stat)) {
+        fprintf(stderr, "Error reading stat file: %s\n", strerror(errno));
         goto close;
     }
-    if (!strtok(buffer, "(") || !(pbuf = strtok(NULL, ")"))) {
-        fprintf(stderr, "Stat file for pid %d misses "
+    if (!strtok(buffer, "(") || !(command = strtok(NULL, ")"))) {
+        fprintf(stderr, "Stat file for pid %s misses "
                         "command name between parenthesis: %s\n",
-                        pid, buffer);
+                        number, buffer);
         goto close;
     }
-    if (!strcmp(pbuf, progname)) {
-        fclose(stat_file);
+    if (!strcmp(command, executable)) {
+        fclose(stat);
         return pid;
     }
 
     close:
-    fclose(stat_file);
+    fclose(stat);
     return 0;
 }
 
-void send_signal(char *progname, int signum) {
-    DIR *proc_dir;
-    struct dirent *proc_dirent;
+void send_signal(char *executable, int signum) {
+    DIR *processes;
+    struct dirent *program;
     pid_t pid;
 
-    if (!(proc_dir = opendir("/proc"))) {
+    if (!(processes = opendir("/proc"))) {
         fprintf(stderr, "Error opening /proc: %s\n", strerror(errno));
         return;
     }
 
-    while ((proc_dirent = readdir(proc_dir))) {
-        if ((pid = check_pid(progname, proc_dirent->d_name)))
+    while ((program = readdir(processes))) {
+        if ((pid = check_pid(executable, program->d_name))) {
             kill(pid, SIGRTMIN+signum);
+            break;
+        }
     }
 
-    closedir(proc_dir);
+    closedir(processes);
     return;
 }
