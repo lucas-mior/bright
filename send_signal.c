@@ -26,6 +26,27 @@
 
 static pid_t check_pid(char *, char*);
 
+void send_signal(char *executable, int signum) {
+    DIR *processes;
+    struct dirent *program;
+    pid_t pid;
+
+    if (!(processes = opendir("/proc"))) {
+        fprintf(stderr, "Error opening /proc: %s\n", strerror(errno));
+        return;
+    }
+
+    while ((program = readdir(processes))) {
+        if ((pid = check_pid(executable, program->d_name))) {
+            kill(pid, SIGRTMIN+signum);
+            break;
+        }
+    }
+
+    closedir(processes);
+    return;
+}
+
 pid_t check_pid(char *executable, char *number) {
     static char buffer[256];
     int pid;
@@ -59,25 +80,4 @@ pid_t check_pid(char *executable, char *number) {
     close:
     fclose(stat);
     return 0;
-}
-
-void send_signal(char *executable, int signum) {
-    DIR *processes;
-    struct dirent *program;
-    pid_t pid;
-
-    if (!(processes = opendir("/proc"))) {
-        fprintf(stderr, "Error opening /proc: %s\n", strerror(errno));
-        return;
-    }
-
-    while ((program = readdir(processes))) {
-        if ((pid = check_pid(executable, program->d_name))) {
-            kill(pid, SIGRTMIN+signum);
-            break;
-        }
-    }
-
-    closedir(processes);
-    return;
 }
