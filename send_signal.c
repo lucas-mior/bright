@@ -14,6 +14,7 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
+#include <sys/stat.h>
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +27,7 @@
 
 static pid_t check_pid(char *, char*);
 
-void send_signal(char *executable, int signum) {
+void send_signal(char *executable, int signal_number) {
     DIR *processes;
     struct dirent *program;
     pid_t pid;
@@ -37,8 +38,10 @@ void send_signal(char *executable, int signum) {
     }
 
     while ((program = readdir(processes))) {
+        if (program->d_type != DT_DIR)
+            continue;
         if ((pid = check_pid(executable, program->d_name))) {
-            kill(pid, SIGRTMIN+signum);
+            kill(pid, SIGRTMIN+signal_number);
             break;
         }
     }
@@ -57,7 +60,7 @@ pid_t check_pid(char *executable, char *number) {
         return 0;
 
     snprintf(buffer, sizeof(buffer), "/proc/%s/stat", number);
-    buffer[255] = '\0';
+    buffer[sizeof(buffer)-1] = '\0';
     if (!(stat = fopen(buffer, "r"))) {
         fprintf(stderr, "Error opening %s: %s\n", buffer, strerror(errno));
         return 0;
@@ -66,13 +69,16 @@ pid_t check_pid(char *executable, char *number) {
         fprintf(stderr, "Error reading stat file: %s\n", strerror(errno));
         goto close;
     }
-    if (!strtok(buffer, "(") || !(command = strtok(NULL, ")"))) {
-        fprintf(stderr, "Stat file for pid %s misses "
-                        "command name between parenthesis: %s\n",
-                        number, buffer);
-        goto close;
+
+    command = buffer;
+    while (*command != '(')
+        command++;
+    command++;
+    while (*command == *executable) {
+        command++;
+        executable++;
     }
-    if (!strcmp(command, executable)) {
+    if ((*executable == '\0') && (*command == ')')) {
         fclose(stat);
         return pid;
     }
