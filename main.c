@@ -24,14 +24,14 @@ void save_new(Brightness *, Brightness *);
 void usage(FILE *);
 
 int main(int argc, char *argv[]) {
-    char *prog_to_sig = NULL;
+    char *program_to_signal = NULL;
     Command c;
     switch (argc) {
     case 1: 
         c = print;
         break;
     case 3:
-        prog_to_sig = argv[2];
+        program_to_signal = argv[2];
     case 2:
         c = argv[1][0];
         switch (c) {
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     save_new(&new_bright, &old_bright);
     printf("🔆 %i\n", new_bright.index);
 
-    if (prog_to_sig) {
+    if (program_to_signal) {
         Number BRIGHT;
         if (!(BRIGHT.string = getenv("BRIGHT"))) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
             return 0;
         }
 
-        send_signal(prog_to_sig, BRIGHT.number);
+        send_signal(program_to_signal, BRIGHT.number);
     }
 
     return 0;
