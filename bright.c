@@ -26,17 +26,17 @@
 
 #include "send_signal.h"
 
+typedef union Number {
+    char *string;
+    int number;
+} Number;
+
 typedef struct Brightness {
     char file[PATH_MAX];
-    char str[12];
-    int absolute;
+    Number absolute;
     int index;
 } Brightness;
 
-typedef union Number {
-    char *str;
-    int number;
-} Number;
 
 #define NLEVELS 11
 static int levels[NLEVELS];
@@ -84,22 +84,22 @@ void get_bright(Brightness *bright) {
         return;
     }
 
-    if (!fgets(bright->str, 9, file)) {
+    if (!fgets(bright->absolute.string, 9, file)) {
         fprintf(stderr, "Can't read from file.\n");
         (void) fclose(file);
         return;
     }
 
     char *end_pointer = NULL;
-    unsigned long aux = strtoul(bright->str, &end_pointer, 10);
-    if ((aux > INT_MAX) || (end_pointer == bright->str)) {
+    unsigned long aux = strtoul(bright->absolute.string, &end_pointer, 10);
+    if ((aux > INT_MAX) || (end_pointer == bright->absolute.string)) {
         fprintf(stderr, "Invalid brightness read from file: "
                         "string: %s"
-                        "integer: %lu\n", bright->str, aux);
+                        "integer: %lu\n", bright->absolute.string, aux);
         (void) fclose(file);
         exit(1);
     }
-    bright->absolute = (int) aux;
+    bright->absolute.number = (int) aux;
 
     (void) fclose(file);
     return;
@@ -176,12 +176,12 @@ int main(int argc, char *argv[]) {
     snprintf(new_bright.file, sizeof(new_bright.file), "%s/brightness", bright_dir);
 
     get_bright(&max_bright);
-    create_levels(max_bright.absolute);
+    create_levels(max_bright.absolute.number);
 
     get_bright(&old_bright);
-    old_bright.index = find_index(old_bright.absolute);
+    old_bright.index = find_index(old_bright.absolute.number);
 
-    new_bright.absolute = old_bright.absolute;
+    new_bright.absolute.number = old_bright.absolute.number;
     new_bright.index = old_bright.index;
 
     switch (c) {
@@ -206,11 +206,11 @@ int main(int argc, char *argv[]) {
 
     if (prog_to_sig) {
         Number bright;
-        if (!(bright.str = getenv("BRIGHT"))) {
+        if (!(bright.string = getenv("BRIGHT"))) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
-        if ((bright.number = atoi(bright.str)) < 10) {
+        if ((bright.number = atoi(bright.string)) < 10) {
             fprintf(stderr, "Invalid BRIGHT environment variable.\n");
             return 0;
         }
