@@ -204,17 +204,17 @@ int main(int argc, char *argv[]) {
     printf("🔆 %i\n", new_bright.index);
 
     if (prog_to_sig) {
-        Number bright;
-        if (!(bright.string = getenv("BRIGHT"))) {
+        Number BRIGHT;
+        if (!(BRIGHT.string = getenv("BRIGHT"))) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
-        if ((bright.number = atoi(bright.string)) < 10) {
-            fprintf(stderr, "Invalid BRIGHT environment variable.\n");
+        if ((BRIGHT.number = atoi(BRIGHT.string)) < 10) {
+            fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
             return 0;
         }
 
-        send_signal(prog_to_sig, bright.number);
+        send_signal(prog_to_sig, BRIGHT.number);
     }
 
     return 0;
