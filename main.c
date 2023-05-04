@@ -14,37 +14,8 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
-#define _POSIX_C_SOURCE 2
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <errno.h>
-#include <signal.h>
-#include <limits.h>
-#include <math.h>
+#include "bright.h"
 
-#include "send_signal.h"
-
-typedef union Number {
-    char *string;
-    int number;
-} Number;
-
-typedef struct Brightness {
-    char file[PATH_MAX];
-    Number absolute;
-    int index;
-} Brightness;
-
-typedef enum Command {
-    increase = '+',
-    decrease = '-',
-    help = 'h',
-    print = 'p'
-} Command;
-
-#define NLEVELS 11
 static int levels[NLEVELS];
 static const char *bright_dir = "/sys/class/backlight/intel_backlight";
 

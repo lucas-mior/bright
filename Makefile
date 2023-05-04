@@ -19,9 +19,7 @@ all: bright
 
 bear: Makefile
 	bear -- make > compile_commands.json
-$(objs): Makefile send_signal.h
-
-main.o: send_signal.h
+$(objs): Makefile
 
 .c.o:
 	$(CC) -O2 $(cflags) $(cppflags) -lm -c -o $@ $<

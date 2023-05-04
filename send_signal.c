@@ -23,8 +23,6 @@
 #include <dirent.h>
 #include <errno.h>
 
-#include "send_signal.h"
-
 static pid_t check_pid(char *, char*);
 
 void send_signal(char *executable, int signal_number) {
