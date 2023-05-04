@@ -27,7 +27,7 @@
 #include "send_signal.h"
 
 typedef struct Brightness {
-    char file[256];
+    char file[PATH_MAX];
     char str[12];
     int num;
     int index;
