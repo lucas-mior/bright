@@ -32,13 +32,12 @@ int main(int argc, char *argv[]) {
         break;
     case 3:
         prog_to_sig = argv[2];
-        __attribute__((fallthrough));
     case 2:
         c = argv[1][0];
         switch (c) {
-        case increase: __attribute__((fallthrough));
-        case decrease: __attribute__((fallthrough));
-        case help: __attribute__((fallthrough));
+        case increase:
+        case decrease:
+        case help:
         case print:
             break;
         default:
