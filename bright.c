@@ -35,7 +35,7 @@ typedef struct Brightness {
 
 typedef union Number {
     char *str;
-    int num;
+    int number;
 } Number;
 
 #define NLEVELS 11
@@ -210,12 +210,12 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
-        if ((bright.num = atoi(bright.str)) < 10) {
+        if ((bright.number = atoi(bright.str)) < 10) {
             fprintf(stderr, "Invalid BRIGHT environment variable.\n");
             return 0;
         }
 
-        send_signal(prog_to_sig, bright.num);
+        send_signal(prog_to_sig, bright.number);
     }
 
     return 0;
