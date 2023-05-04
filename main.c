@@ -55,28 +55,27 @@ void create_levels(int last) {
 
 void get_bright(Brightness *bright) {
     FILE *file = NULL;
+    char buffer[12];
 
     if (!(file = fopen(bright->file, "r"))) {
         fprintf(stderr, "Can't open file for getting old bright.\n");
         return;
     }
 
-    if (!fgets(bright->absolute.string.buf, sizeof(bright->absolute.string.buf), file)) {
+    if (!fgets(buffer, sizeof(buffer), file)) {
         fprintf(stderr, "Can't read from file.\n");
         (void) fclose(file);
         return;
     }
 
     char *end_pointer = NULL;
-    unsigned long aux = strtoul(&bright->absolute.string, &end_pointer, 10);
-    if ((aux > INT_MAX) || (end_pointer == &bright->absolute.string)) {
-        fprintf(stderr, "Invalid brightness read from file: "
-                        "string: %s"
-                        "integer: %lu\n", bright->absolute.string, aux);
+    unsigned long aux = strtoul(buffer, &end_pointer, 10);
+    if ((aux > INT_MAX) || (end_pointer == buffer)) {
+        fprintf(stderr, "Invalid brightness read from file: %s\n", buffer);
         (void) fclose(file);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    bright->absolute.number = (int) aux;
+    bright->absolute = (int) aux;
 
     (void) fclose(file);
     return;
@@ -148,12 +147,12 @@ int main(int argc, char *argv[]) {
     snprintf(new_bright.file, sizeof(new_bright.file), "%s/brightness", bright_dir);
 
     get_bright(&max_bright);
-    create_levels(max_bright.absolute.number);
+    create_levels(max_bright.absolute);
 
     get_bright(&old_bright);
-    old_bright.index = find_index(old_bright.absolute.number);
+    old_bright.index = find_index(old_bright.absolute);
 
-    new_bright.absolute.number = old_bright.absolute.number;
+    new_bright.absolute = old_bright.absolute;
     new_bright.index = old_bright.index;
 
     switch (c) {
@@ -178,11 +177,11 @@ int main(int argc, char *argv[]) {
 
     if (prog_to_sig) {
         Number BRIGHT;
-        if (!(BRIGHT.string.p = getenv("BRIGHT"))) {
+        if (!(BRIGHT.string = getenv("BRIGHT"))) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
-        if ((BRIGHT.number = atoi(&BRIGHT.string)) < 10) {
+        if ((BRIGHT.number = atoi(BRIGHT.string)) < 10) {
             fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
             return 0;
         }

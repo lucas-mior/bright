@@ -8,19 +8,14 @@
 #include <limits.h>
 #include <math.h>
 
-typedef union String {
-    char *p;
-    char buf[12];
-} String;
-
 typedef struct Number {
-    String string;
+    char *string;
     int number;
 } Number;
 
 typedef struct Brightness {
     char file[PATH_MAX];
-    Number absolute;
+    int absolute;
     int index;
 } Brightness;
 
