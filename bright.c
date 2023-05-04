@@ -28,7 +28,7 @@
 
 typedef struct Brightness {
     char file[256];
-    char str[10];
+    char str[12];
     int num;
     int index;
 } Brightness;
