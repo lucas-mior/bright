@@ -42,12 +42,10 @@ int main(int argc, char *argv[]) {
             break;
         default:
             usage(stderr);
-            break;
         }
         break;
     default:
         usage(stderr);
-        return 1;
     }
 
     Brightness max_bright;
@@ -192,5 +190,4 @@ void usage(FILE *stream) {
     fprintf(stream, "%c : print current brightness\n", print);
     fprintf(stream, "if <s> is set, send $BRIGHT signal to <s>.\n");
     exit((int) (stream != stdout));
-    return;
 }
