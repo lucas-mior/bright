@@ -29,7 +29,7 @@
 typedef struct Brightness {
     char file[PATH_MAX];
     char str[12];
-    int num;
+    int absolute;
     int index;
 } Brightness;
 
@@ -99,7 +99,7 @@ void get_bright(Brightness *bright) {
         (void) fclose(file);
         exit(1);
     }
-    bright->num = (int) aux;
+    bright->absolute = (int) aux;
 
     (void) fclose(file);
     return;
@@ -176,12 +176,12 @@ int main(int argc, char *argv[]) {
     snprintf(new_bright.file, sizeof(new_bright.file), "%s/brightness", bright_dir);
 
     get_bright(&max_bright);
-    create_levels(max_bright.num);
+    create_levels(max_bright.absolute);
 
     get_bright(&old_bright);
-    old_bright.index = find_index(old_bright.num);
+    old_bright.index = find_index(old_bright.absolute);
 
-    new_bright.num = old_bright.num;
+    new_bright.absolute = old_bright.absolute;
     new_bright.index = old_bright.index;
 
     switch (c) {
