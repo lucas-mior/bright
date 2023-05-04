@@ -16,8 +16,94 @@
 
 #include "bright.h"
 
-static int levels[NLEVELS];
-static const char *bright_dir = "/sys/class/backlight/intel_backlight";
+inline bool between(int, int, int);
+int find_index(int);
+void create_levels(int);
+void get_bright(Brightness *);
+void save_new(Brightness *, Brightness *);
+void usage(FILE *);
+
+int main(int argc, char *argv[]) {
+    char *prog_to_sig = NULL;
+    Command c;
+    switch (argc) {
+    case 1: 
+        c = print;
+        break;
+    case 3:
+        prog_to_sig = argv[2];
+        __attribute__((fallthrough));
+    case 2:
+        c = argv[1][0];
+        switch (c) {
+        case increase: __attribute__((fallthrough));
+        case decrease: __attribute__((fallthrough));
+        case help: __attribute__((fallthrough));
+        case print:
+            break;
+        default:
+            usage(stderr);
+            break;
+        }
+        break;
+    default:
+        usage(stderr);
+        return 1;
+    }
+
+    Brightness max_bright;
+    Brightness old_bright;
+    Brightness new_bright;
+
+    snprintf(max_bright.file, sizeof(max_bright.file), "%s/max_brightness", bright_dir);
+    snprintf(old_bright.file, sizeof(old_bright.file), "%s/brightness", bright_dir);
+    snprintf(new_bright.file, sizeof(new_bright.file), "%s/brightness", bright_dir);
+
+    get_bright(&max_bright);
+    create_levels(max_bright.absolute);
+
+    get_bright(&old_bright);
+    old_bright.index = find_index(old_bright.absolute);
+
+    new_bright.absolute = old_bright.absolute;
+    new_bright.index = old_bright.index;
+
+    switch (c) {
+    case print:
+        printf("🔆 %i", old_bright.index);
+        exit(0);
+    case decrease:
+        if (0 < old_bright.index)
+            new_bright.index -= 1;
+        break;
+    case increase:
+        if (old_bright.index < NLEVELS - 1)
+            new_bright.index += 1;
+        break;
+    case help:
+        usage(stdout);
+        break;
+    }
+
+    save_new(&new_bright, &old_bright);
+    printf("🔆 %i\n", new_bright.index);
+
+    if (prog_to_sig) {
+        Number BRIGHT;
+        if (!(BRIGHT.string = getenv("BRIGHT"))) {
+            fprintf(stderr, "BRIGHT environment variable not set.\n");
+            return 0;
+        }
+        if ((BRIGHT.number = atoi(BRIGHT.string)) < 10) {
+            fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
+            return 0;
+        }
+
+        send_signal(prog_to_sig, BRIGHT.number);
+    }
+
+    return 0;
+}
 
 inline bool between(int a, int x, int b) {
     return x < b && a <= x;
@@ -108,86 +194,4 @@ void usage(FILE *stream) {
     fprintf(stream, "if <s> is set, send $BRIGHT signal to <s>.\n");
     exit((int) (stream != stdout));
     return;
-}
-
-int main(int argc, char *argv[]) {
-    char *prog_to_sig = NULL;
-    Command c;
-    switch (argc) {
-    case 1: 
-        c = print;
-        break;
-    case 3:
-        prog_to_sig = argv[2];
-        __attribute__((fallthrough));
-    case 2:
-        c = argv[1][0];
-        switch (c) {
-        case increase: __attribute__((fallthrough));
-        case decrease: __attribute__((fallthrough));
-        case help: __attribute__((fallthrough));
-        case print:
-            break;
-        default:
-            usage(stderr);
-            break;
-        }
-        break;
-    default:
-        usage(stderr);
-        return 1;
-    }
-
-    Brightness max_bright;
-    Brightness old_bright;
-    Brightness new_bright;
-
-    snprintf(max_bright.file, sizeof(max_bright.file), "%s/max_brightness", bright_dir);
-    snprintf(old_bright.file, sizeof(old_bright.file), "%s/brightness", bright_dir);
-    snprintf(new_bright.file, sizeof(new_bright.file), "%s/brightness", bright_dir);
-
-    get_bright(&max_bright);
-    create_levels(max_bright.absolute);
-
-    get_bright(&old_bright);
-    old_bright.index = find_index(old_bright.absolute);
-
-    new_bright.absolute = old_bright.absolute;
-    new_bright.index = old_bright.index;
-
-    switch (c) {
-    case print:
-        printf("🔆 %i", old_bright.index);
-        exit(0);
-    case decrease:
-        if (0 < old_bright.index)
-            new_bright.index -= 1;
-        break;
-    case increase:
-        if (old_bright.index < NLEVELS - 1)
-            new_bright.index += 1;
-        break;
-    case help:
-        usage(stdout);
-        break;
-    }
-
-    save_new(&new_bright, &old_bright);
-    printf("🔆 %i\n", new_bright.index);
-
-    if (prog_to_sig) {
-        Number BRIGHT;
-        if (!(BRIGHT.string = getenv("BRIGHT"))) {
-            fprintf(stderr, "BRIGHT environment variable not set.\n");
-            return 0;
-        }
-        if ((BRIGHT.number = atoi(BRIGHT.string)) < 10) {
-            fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
-            return 0;
-        }
-
-        send_signal(prog_to_sig, BRIGHT.number);
-    }
-
-    return 0;
 }

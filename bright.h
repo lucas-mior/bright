@@ -27,5 +27,7 @@ typedef enum Command {
 } Command;
 
 #define NLEVELS 11
+static int levels[NLEVELS];
+static const char *bright_dir = "/sys/class/backlight/intel_backlight";
 
 void send_signal(char *, int);
