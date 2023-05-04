@@ -8,8 +8,13 @@
 #include <limits.h>
 #include <math.h>
 
-typedef union Number {
-    char *string;
+typedef union String {
+    char *p;
+    char buf[12];
+} String;
+
+typedef struct Number {
+    String string;
     int number;
 } Number;
 

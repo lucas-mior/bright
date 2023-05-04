@@ -19,7 +19,7 @@ all: bright
 
 bear: Makefile
 	bear -- make > compile_commands.json
-$(objs): Makefile
+$(objs): Makefile bright.h
 
 .c.o:
 	$(CC) -O2 $(cflags) $(cppflags) -lm -c -o $@ $<

@@ -61,15 +61,15 @@ void get_bright(Brightness *bright) {
         return;
     }
 
-    if (!fgets(bright->absolute.string, 9, file)) {
+    if (!fgets(bright->absolute.string.buf, sizeof(bright->absolute.string.buf), file)) {
         fprintf(stderr, "Can't read from file.\n");
         (void) fclose(file);
         return;
     }
 
     char *end_pointer = NULL;
-    unsigned long aux = strtoul(bright->absolute.string, &end_pointer, 10);
-    if ((aux > INT_MAX) || (end_pointer == bright->absolute.string)) {
+    unsigned long aux = strtoul(&bright->absolute.string, &end_pointer, 10);
+    if ((aux > INT_MAX) || (end_pointer == &bright->absolute.string)) {
         fprintf(stderr, "Invalid brightness read from file: "
                         "string: %s"
                         "integer: %lu\n", bright->absolute.string, aux);
@@ -139,7 +139,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Brightness max_bright, old_bright, new_bright;
+    Brightness max_bright;
+    Brightness old_bright;
+    Brightness new_bright;
 
     snprintf(max_bright.file, sizeof(max_bright.file), "%s/max_brightness", bright_dir);
     snprintf(old_bright.file, sizeof(old_bright.file), "%s/brightness", bright_dir);
@@ -176,11 +178,11 @@ int main(int argc, char *argv[]) {
 
     if (prog_to_sig) {
         Number BRIGHT;
-        if (!(BRIGHT.string = getenv("BRIGHT"))) {
+        if (!(BRIGHT.string.p = getenv("BRIGHT"))) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
-        if ((BRIGHT.number = atoi(BRIGHT.string)) < 10) {
+        if ((BRIGHT.number = atoi(&BRIGHT.string)) < 10) {
             fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
             return 0;
         }
