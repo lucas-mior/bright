@@ -37,6 +37,12 @@ typedef struct Brightness {
     int index;
 } Brightness;
 
+typedef enum Command {
+    increase = '+',
+    decrease = '-',
+    help = 'h',
+    print = 'p'
+} Command;
 
 #define NLEVELS 11
 static int levels[NLEVELS];
@@ -121,13 +127,6 @@ void save_new(Brightness *new_bright, Brightness *old_bright) {
     (void) fclose(save);
     return;
 }
-
-typedef enum Command {
-    increase = '+',
-    decrease = '-',
-    help = 'h',
-    print = 'p'
-} Command;
 
 void usage(FILE *stream) {
     fprintf(stream, "usage: bright [%c%c%c%c] <s>\n", 
