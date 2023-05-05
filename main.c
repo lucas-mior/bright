@@ -52,9 +52,12 @@ int main(int argc, char *argv[]) {
     Brightness old_bright;
     Brightness new_bright;
 
-    snprintf(max_bright.file, sizeof(max_bright.file), "%s/max_brightness", bright_dir);
-    snprintf(old_bright.file, sizeof(old_bright.file), "%s/brightness", bright_dir);
-    snprintf(new_bright.file, sizeof(new_bright.file), "%s/brightness", bright_dir);
+    snprintf(max_bright.file, sizeof(max_bright.file),
+             "%s/max_brightness", bright_directory);
+    snprintf(old_bright.file, sizeof(old_bright.file),
+             "%s/brightness", bright_directory);
+    snprintf(new_bright.file, sizeof(new_bright.file),
+             "%s/brightness", bright_directory);
 
     get_bright(&max_bright);
     create_levels(max_bright.absolute);
