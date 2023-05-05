@@ -16,7 +16,7 @@
 
 #include "bright.h"
 
-inline bool between(int, int, int);
+bool between(int, int, int);
 int find_index(int);
 void create_levels(int);
 void get_bright(Brightness *);
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-inline bool between(int a, int x, int b) {
+bool between(int a, int x, int b) {
     return x < b && a <= x;
 }
 
