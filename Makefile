@@ -25,6 +25,8 @@ $(objs): Makefile bright.h
 	$(CC) -O2 $(cflags) $(cppflags) -lm -c -o $@ $<
 
 bright: $(objs)
+	ctags --kinds-C=+l *.h *.c
+	vtags.sed tags > .tags.vim
 	$(CC) -O2 $(cflags) $(LDFLAGS) -lm -o $@ $(objs) $(ldlibs)
 
 clean:
