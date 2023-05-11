@@ -21,7 +21,7 @@ int find_index(int);
 void create_levels(int);
 void get_bright(Brightness *);
 void save_new(Brightness *, Brightness *);
-void usage(FILE *);
+void main_usage(FILE *);
 
 int main(int argc, char *argv[]) {
     char *program_to_signal = NULL;
@@ -41,11 +41,11 @@ int main(int argc, char *argv[]) {
         case print:
             break;
         default:
-            usage(stderr);
+            main_usage(stderr);
         }
         break;
     default:
-        usage(stderr);
+        main_usage(stderr);
     }
 
     Brightness max_bright;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
             new_bright.index += 1;
         break;
     case help:
-        usage(stdout);
+        main_usage(stdout);
         break;
     }
 
@@ -184,7 +184,7 @@ void save_new(Brightness *new_bright, Brightness *old_bright) {
     return;
 }
 
-void usage(FILE *stream) {
+void main_usage(FILE *stream) {
     fprintf(stream, "usage: bright [%c%c%c%c] <s>\n", 
                     increase, decrease, help, print);
     fprintf(stream, "%c : decrease brightness\n", increase);
