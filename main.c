@@ -25,16 +25,16 @@ void main_usage(FILE *);
 
 int main(int argc, char *argv[]) {
     char *program_to_signal = NULL;
-    Command c;
+    Command command;
     switch (argc) {
     case 1: 
-        c = print;
+        command = print;
         break;
     case 3:
         program_to_signal = argv[2];
     case 2:
-        c = argv[1][0];
-        switch (c) {
+        command = argv[1][0];
+        switch (command) {
         case increase:
         case decrease:
         case help:
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     new_bright.absolute = old_bright.absolute;
     new_bright.index = old_bright.index;
 
-    switch (c) {
+    switch (command) {
     case print:
         printf("🔆 %i", old_bright.index);
         exit(0);
