@@ -16,41 +16,45 @@
 
 #include "bright.h"
 
-bool between(int, int, int);
-int find_index(int);
-void create_levels(int);
-void get_bright(Brightness *);
-void save_new(Brightness *, Brightness *);
-void main_usage(FILE *);
+static bool between(int, int, int);
+static int find_index(int);
+static void create_levels(int);
+static void get_bright(Brightness *);
+static void save_new(Brightness *, Brightness *);
+static void main_usage(FILE *) __attribute__((noreturn));
 
 int main(int argc, char *argv[]) {
-    char *program_to_signal = NULL;
-    Command command;
+    bool spell_error = true;
+    char *program_to_signal;
     Brightness max_bright;
     Brightness old_bright;
     Brightness new_bright;
+    uint ic;
 
-    switch (argc) {
-    case 1: 
-        command = print;
-        break;
-    case 3:
-        program_to_signal = argv[2];
-    case 2:
-        command = argv[1][0];
-        switch (command) {
-        case increase:
-        case decrease:
-        case help:
-        case print:
-            break;
-        default:
-            main_usage(stderr);
-        }
-        break;
-    default:
+    if ((argc <= 1) || (argc > 3))
         main_usage(stderr);
+
+    for (ic = 0; ic < ARRAY_LENGTH(commands); ic += 1) {
+        if (!strcmp(argv[1], commands[ic].shortname)
+            || !strcmp(argv[1], commands[ic].longname)) {
+            spell_error = false;
+            switch (ic) {
+            case COMMAND_MORE:
+            case COMMAND_LESS:
+            case COMMAND_PRINT:
+                goto out;
+            case COMMAND_HELP:
+                main_usage(stdout);
+            default:
+                main_usage(stderr);
+            }
+        }
     }
+    if (spell_error)
+        main_usage(stderr);
+
+    out:
+    program_to_signal = argv[2];
 
     snprintf(max_bright.file, sizeof(max_bright.file),
              "%s/max_brightness", bright_directory);
@@ -68,20 +72,17 @@ int main(int argc, char *argv[]) {
     new_bright.absolute = old_bright.absolute;
     new_bright.index = old_bright.index;
 
-    switch (command) {
-    case print:
+    switch (ic) {
+    case COMMAND_PRINT:
         printf("🔆 %i", old_bright.index);
         exit(0);
-    case decrease:
+    case COMMAND_LESS:
         if (0 < old_bright.index)
             new_bright.index -= 1;
         break;
-    case increase:
+    case COMMAND_MORE:
         if (old_bright.index < NLEVELS - 1)
             new_bright.index += 1;
-        break;
-    case help:
-        main_usage(stdout);
         break;
     }
 
@@ -133,7 +134,7 @@ void create_levels(int last) {
     levels[i = 1] = 1;
     levels[i = 2] = first;
     for (i = 3; i < NLEVELS-1; i += 1)
-        levels[i] = (double) levels[i-1] * quotient;
+        levels[i] = (int) ((double) levels[i-1] * quotient);
     levels[i = NLEVELS-1] = last;
 
     return;
@@ -141,7 +142,9 @@ void create_levels(int last) {
 
 void get_bright(Brightness *bright) {
     FILE *file = NULL;
-    char buffer[12];
+    char buffer[16];
+    char *end_pointer = NULL;
+    unsigned long aux;
 
     if (!(file = fopen(bright->file, "r"))) {
         fprintf(stderr, "Can't open file for getting old bright.\n");
@@ -154,8 +157,7 @@ void get_bright(Brightness *bright) {
         return;
     }
 
-    char *end_pointer = NULL;
-    unsigned long aux = strtoul(buffer, &end_pointer, 10);
+    aux = strtoul(buffer, &end_pointer, 10);
     if ((aux > INT_MAX) || (end_pointer == buffer)) {
         fprintf(stderr, "Invalid brightness read from file: %s\n", buffer);
         (void) fclose(file);
@@ -185,12 +187,12 @@ void save_new(Brightness *new_bright, Brightness *old_bright) {
 }
 
 void main_usage(FILE *stream) {
-    fprintf(stream, "usage: bright [%c%c%c%c] <s>\n", 
-                    increase, decrease, help, print);
-    fprintf(stream, "%c : decrease brightness\n", increase);
-    fprintf(stream, "%c : increase brightness\n", decrease);
-    fprintf(stream, "%c : show this help message\n", help);
-    fprintf(stream, "%c : print current brightness\n", print);
-    fprintf(stream, "if <s> is set, send $BRIGHT signal to <s>.\n");
-    exit((int) (stream != stdout));
+    fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
+    fprintf(stream, "Available commands:\n");
+    for (uint i = 0; i < ARRAY_LENGTH(commands); i += 1) {
+        fprintf(stream, "%s | %-*s : %s\n",
+                commands[i].shortname, 8, commands[i].longname, 
+                commands[i].description);
+    }
+    exit(stream != stdout);
 }

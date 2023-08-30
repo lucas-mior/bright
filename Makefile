@@ -5,7 +5,7 @@ srcdir = .
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-cflags = -std=c99 -Wall -Wextra -Weverything
+cflags = -std=c99 -Wall -Wextra -Weverything -Wno-unsafe-buffer-usage
 CC = clang
 
 ldlibs = $(LDLIBS)
@@ -23,7 +23,7 @@ bear: Makefile
 $(objs): Makefile bright.h
 
 .c.o:
-	$(CC) -O2 $(cflags) $(cppflags) -lm -c -o $@ $<
+	$(CC) -O2 $(cflags) $(cppflags) -c -o $@ $<
 
 bright: $(objs)
 	ctags --kinds-C=+l *.h *.c
