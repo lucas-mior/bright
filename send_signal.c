@@ -14,16 +14,18 @@
 /* You should have received a copy of the GNU General Public License */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
-#include <sys/stat.h>
 #define _POSIX_C_SOURCE 200809L
+#include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
 #include <dirent.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <signal.h>
 
 static pid_t check_pid(const char *, const char*);
+void send_signal(char *, int);
 
 void send_signal(char *executable, int signal_number) {
     DIR *processes;
@@ -36,8 +38,8 @@ void send_signal(char *executable, int signal_number) {
     }
 
     while ((program = readdir(processes))) {
-        if (program->d_type != DT_DIR)
-            continue;
+        /* if (program->d_type != DT_DIR) */
+        /*     continue; */
         if ((pid = check_pid(executable, program->d_name))) {
             kill(pid, SIGRTMIN+signal_number);
             break;
@@ -57,7 +59,7 @@ pid_t check_pid(const char *executable, const char *number) {
     if ((pid = atoi(number)) <= 0)
         return 0;
 
-    snprintf(buffer, sizeof(buffer), "/proc/%s/cmdline", number);
+    snprintf(buffer, sizeof(buffer), "/proc/%d/cmdline", pid);
     buffer[sizeof(buffer)-1] = '\0';
     if (!(cmdline = fopen(buffer, "r")))
         return 0;

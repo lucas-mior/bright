@@ -5,7 +5,8 @@ srcdir = .
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-cflags = -std=gnu99 -Wall -Wextra -pedantic $(CFLAGS)
+cflags = -std=c99 -Wall -Wextra -Weverything
+CC = clang
 
 ldlibs = $(LDLIBS)
 

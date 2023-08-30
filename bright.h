@@ -1,4 +1,5 @@
-#define _POSIX_C_SOURCE 2
+/* #define _POSIX_C_SOURCE 2 */
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -7,6 +8,9 @@
 #include <signal.h>
 #include <limits.h>
 #include <math.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <linux/limits.h>
 
 typedef struct Number {
     char *string;
