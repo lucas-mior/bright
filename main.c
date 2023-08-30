@@ -26,6 +26,10 @@ void main_usage(FILE *);
 int main(int argc, char *argv[]) {
     char *program_to_signal = NULL;
     Command command;
+    Brightness max_bright;
+    Brightness old_bright;
+    Brightness new_bright;
+
     switch (argc) {
     case 1: 
         command = print;
@@ -47,10 +51,6 @@ int main(int argc, char *argv[]) {
     default:
         main_usage(stderr);
     }
-
-    Brightness max_bright;
-    Brightness old_bright;
-    Brightness new_bright;
 
     snprintf(max_bright.file, sizeof(max_bright.file),
              "%s/max_brightness", bright_directory);
