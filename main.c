@@ -15,6 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 #include "bright.h"
+#include <stdlib.h>
 
 static bool between(int, int, int);
 static int find_index(int);
@@ -30,6 +31,8 @@ int main(int argc, char *argv[]) {
     Brightness old_bright;
     Brightness new_bright;
     uint ic;
+
+	int n, m, p;
 
     if ((argc <= 1) || (argc > 3))
         main_usage(stderr);
@@ -56,12 +59,16 @@ int main(int argc, char *argv[]) {
     out:
     program_to_signal = argv[2];
 
-    snprintf(max_bright.file, sizeof(max_bright.file),
-             "%s/max_brightness", bright_directory);
-    snprintf(old_bright.file, sizeof(old_bright.file),
-             "%s/brightness", bright_directory);
-    snprintf(new_bright.file, sizeof(new_bright.file),
-             "%s/brightness", bright_directory);
+    n = snprintf(max_bright.file, sizeof(max_bright.file),
+                "%s/max_brightness", bright_directory);
+    m = snprintf(old_bright.file, sizeof(old_bright.file),
+                "%s/brightness", bright_directory);
+    p = snprintf(new_bright.file, sizeof(new_bright.file),
+                "%s/brightness", bright_directory);
+	if (n < 0 || m < 0 || p < 0) {
+		fprintf(stderr, "Error printing bright file names.\n");
+		exit(EXIT_FAILURE);
+	}
 
     get_bright(&max_bright);
     create_levels(max_bright.absolute);

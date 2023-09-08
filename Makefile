@@ -5,7 +5,7 @@ srcdir = .
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-cflags = -std=c99 -Wall -Wextra -Weverything -Wno-unsafe-buffer-usage
+CFLAGS += -std=c99 -O2 -Weverything -Wno-unsafe-buffer-usage
 CC = clang
 
 ldlibs = $(LDLIBS)
@@ -23,12 +23,12 @@ bear: Makefile
 $(objs): Makefile bright.h
 
 .c.o:
-	$(CC) -O2 $(cflags) $(cppflags) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 bright: $(objs)
 	ctags --kinds-C=+l *.h *.c
 	vtags.sed tags > .tags.vim
-	$(CC) -O2 $(cflags) $(LDFLAGS) -lm -o $@ $(objs) $(ldlibs)
+	$(CC) $(CFLAGS) $(LDFLAGS) -lm -o $@ $(objs) $(ldlibs)
 
 clean:
 	rm -f *.o bright
