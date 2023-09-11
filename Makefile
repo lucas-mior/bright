@@ -5,7 +5,7 @@ srcdir = .
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-CFLAGS += -std=c99 -O2 -Weverything -Wno-unsafe-buffer-usage
+CFLAGS += -std=c99 -D_DEFAULT_SOURCE -O2 -Weverything -Wno-unsafe-buffer-usage
 CC = clang
 
 ldlibs = $(LDLIBS)
