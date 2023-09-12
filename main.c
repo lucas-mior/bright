@@ -121,10 +121,10 @@ int find_index(int value) {
     int i = 0;
 
     while (i <= NLEVELS - 2) {
-        if (between(levels[i], value, levels[i+1]))
+        if (between(levels[i], value, levels[i + 1]))
             return i;
         else
-            i++;
+            i += 1;
     }
 
     return NLEVELS - 1;
@@ -133,16 +133,16 @@ int find_index(int value) {
 void create_levels(int last) {
     int first = last / 60;
     int n = NLEVELS-2;
-    double m = (double) 1 / (double) (n-1);
+    double m = (double) 1 / (double) (n - 1);
     double quotient = pow((double) last / (double) first, m);
 
     int i;
     levels[i = 0] = 0;
     levels[i = 1] = 1;
     levels[i = 2] = first;
-    for (i = 3; i < NLEVELS-1; i += 1)
-        levels[i] = (int) ((double) levels[i-1] * quotient);
-    levels[i = NLEVELS-1] = last;
+    for (i = 3; i < NLEVELS - 1; i += 1)
+        levels[i] = (int) ((double) levels[i - 1] * quotient);
+    levels[i = NLEVELS - 1] = last;
 
     return;
 }
