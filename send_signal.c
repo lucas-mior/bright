@@ -38,8 +38,6 @@ void send_signal(char *executable, int signal_number) {
     }
 
     while ((program = readdir(processes))) {
-        /* if (program->d_type != DT_DIR) */
-        /*     continue; */
         if ((pid = check_pid(executable, program->d_name))) {
             kill(pid, SIGRTMIN+signal_number);
             break;
