@@ -3,19 +3,20 @@ Change screen brightness, print to stdout and signal another program.
 
 ## Usage
 ```
-usage: bright [+-hp] <s>
-+ : decrease brightness
-- : increase brightness
-h : show this help message
-p : print current brightness
-if <s> is set, send $BRIGHT signal to <s>.
+$ bright --help
+usage: bright COMMAND [program_to_signal] 
+Available commands: 
+-m | --more   : more brightness 
+-l | --less   : less brightness 
+-h | --help   : print this help message 
+-p | --print  : print current brightness 
 ```
 
 ## Configuration
 Edit `bright.c` and recompile.
 
 ## Environment variables
-- `$BRIGHT` - Which signal number should be send to \<s\>
+- `$BRIGHT` - Which signal number should be send to [program_to_signal]
 
 ## Installation
 ```
