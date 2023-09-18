@@ -46,7 +46,7 @@ typedef uint64_t uint64;
 #pragma clang diagnostic ignored "-Wpadded"
 typedef struct Number {
     char *string;
-    int number;
+    uint64 number;
 } Number;
 
 typedef struct Brightness {
