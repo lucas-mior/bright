@@ -5,25 +5,30 @@ srcdir = .
 PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 
-CFLAGS += -std=c99 -D_DEFAULT_SOURCE -O2 -Weverything -Wno-unsafe-buffer-usage
-CC = clang
-
 ldlibs = $(LDLIBS)
 
 objs = main.o send_signal.o
 
-all: bright
+all: release
 
 .PHONY: all clean install uninstall
 .SUFFIXES:
 .SUFFIXES: .c .o
 
-bear: Makefile
-	bear -- make > compile_commands.json
+CFLAGS += -std=c99 -D_DEFAULT_SOURCE
+CFLAGS += -Wall -Wextra
+
 $(objs): Makefile bright.h
 
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+debug: CFLAGS += -g
+debug: clean
+debug: bright
+
+release: CFLAGS += -O2
+release: bright
 
 bright: $(objs)
 	ctags --kinds-C=+l *.h *.c

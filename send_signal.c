@@ -25,7 +25,6 @@
 #include <signal.h>
 
 static pid_t check_pid(const char *, const char*);
-void send_signal(char *, int);
 
 void send_signal(char *executable, int signal_number) {
     DIR *processes;

@@ -16,7 +16,7 @@
  */
 
 #include "bright.h"
-#include <stdlib.h>
+#include "send_signal.h"
 
 static bool between(int, int, int);
 static int find_index(int);
