@@ -28,7 +28,6 @@
 #include <sys/types.h>
 #include <linux/limits.h>
 
-
 #ifndef INTEGERS
 #define INTEGERS
 typedef unsigned char uchar;
