@@ -51,7 +51,5 @@ install: all
 	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/bright.1
 
 uninstall:
-	@echo "REMOVE bin/bright"
 	rm -f $(DESTDIR)$(PREFIX)/bin/bright
-	@echo "REMOVE bright.1"
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/bright.1
