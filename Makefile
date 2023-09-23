@@ -11,7 +11,7 @@ objs = main.o send_signal.o
 
 all: release
 
-.PHONY: all clean install uninstall
+.PHONY: all clean install uninstall clang debug release
 .SUFFIXES:
 .SUFFIXES: .c .o
 
