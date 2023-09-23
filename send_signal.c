@@ -24,6 +24,8 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#include "send_signal.h"
+
 static pid_t check_pid(const char *, const char*);
 
 void send_signal(char *executable, int signal_number) {

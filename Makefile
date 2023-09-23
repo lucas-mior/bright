@@ -23,6 +23,10 @@ $(objs): Makefile bright.h
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+clang: CFLAGS += -Weverything -Wno-unsafe-buffer-usage
+clang: CC = clang
+clang: release
+
 debug: CFLAGS += -g
 debug: clean
 debug: bright
