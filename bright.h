@@ -28,6 +28,9 @@
 #include <sys/types.h>
 #include <linux/limits.h>
 
+
+#ifndef INTEGERS
+#define INTEGERS
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
@@ -42,8 +45,8 @@ typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 typedef uint64_t uint64;
+#endif
 
-#pragma clang diagnostic ignored "-Wpadded"
 typedef struct Number {
     char *string;
     uint64 number;
