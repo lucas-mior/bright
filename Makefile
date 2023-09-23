@@ -18,7 +18,7 @@ all: release
 CFLAGS += -std=c99 -D_DEFAULT_SOURCE
 CFLAGS += -Wall -Wextra
 
-$(objs): Makefile bright.h
+$(objs): Makefile bright.h send_signal.h
 
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
