@@ -95,7 +95,6 @@ int main(int argc, char *argv[]) {
     }
 
     save_new(&new_bright, &old_bright);
-    printf("🔆 %i\n", new_bright.index);
 
     if (program_to_signal) {
         Number BRIGHT;
