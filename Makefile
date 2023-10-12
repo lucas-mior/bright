@@ -25,6 +25,7 @@ $(objs): Makefile bright.h send_signal.h
 
 clang: CFLAGS += -Weverything -Wno-unsafe-buffer-usage
 clang: CC = clang
+clang: clean
 clang: release
 
 debug: CFLAGS += -g

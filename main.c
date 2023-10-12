@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
-        if ((BRIGHT.number = (uint64) atol(BRIGHT.string)) < 10) {
+        if ((BRIGHT.number = atol(BRIGHT.string)) < 10) {
             fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
             return 0;
         }

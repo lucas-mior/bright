@@ -51,7 +51,7 @@ typedef ssize_t isize;
 
 typedef struct Number {
     char *string;
-    uint64 number;
+    int64 number;
 } Number;
 
 typedef struct Brightness {
