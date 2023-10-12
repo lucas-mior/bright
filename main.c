@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 
     if (program_to_signal) {
         Number BRIGHT;
-        if (!(BRIGHT.string = getenv("BRIGHT"))) {
+        if (!(BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
             fprintf(stderr, "BRIGHT environment variable not set.\n");
             return 0;
         }
