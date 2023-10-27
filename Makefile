@@ -32,7 +32,7 @@ debug: CFLAGS += -g
 debug: clean
 debug: bright
 
-release: CFLAGS += -O2
+release: CFLAGS += -O2 -flto
 release: bright
 
 bright: $(objs)
