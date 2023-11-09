@@ -7,8 +7,6 @@ MANPREFIX = $(PREFIX)/share/man
 
 ldlibs = $(LDLIBS)
 
-objs = main.o send_signal.o
-
 all: release
 
 .PHONY: all clean install uninstall clang debug release
@@ -17,11 +15,6 @@ all: release
 
 CFLAGS += -std=c99 -D_DEFAULT_SOURCE
 CFLAGS += -Wall -Wextra
-
-$(objs): Makefile bright.h send_signal.h
-
-.c.o:
-	$(CC) $(CFLAGS) -c -o $@ $<
 
 clang: CFLAGS += -Weverything -Wno-unsafe-buffer-usage
 clang: CC = clang
@@ -35,10 +28,13 @@ debug: bright
 release: CFLAGS += -O2 -flto
 release: bright
 
-bright: $(objs)
+src = main.c send_signal.c
+headers = bright.h send_signal.h
+
+bright: $(src) $(headers) Makefile
 	ctags --kinds-C=+l *.h *.c
 	vtags.sed tags > .tags.vim
-	$(CC) $(CFLAGS) $(LDFLAGS) -lm -o $@ $(objs) $(ldlibs)
+	$(CC) $(CFLAGS) $(LDFLAGS) -lm -o $@ $(src) $(ldlibs)
 
 clean:
 	rm -f *.o bright
