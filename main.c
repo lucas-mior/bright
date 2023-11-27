@@ -60,11 +60,11 @@ int main(int argc, char *argv[]) {
     out:
     program_to_signal = argv[2];
 
-    n = snprintf(max_bright.file, sizeof(max_bright.file),
+    n = snprintf(max_bright.file, sizeof (max_bright.file),
                 "%s/max_brightness", bright_directory);
-    m = snprintf(old_bright.file, sizeof(old_bright.file),
+    m = snprintf(old_bright.file, sizeof (old_bright.file),
                 "%s/brightness", bright_directory);
-    p = snprintf(new_bright.file, sizeof(new_bright.file),
+    p = snprintf(new_bright.file, sizeof (new_bright.file),
                 "%s/brightness", bright_directory);
 	if (n < 0 || m < 0 || p < 0) {
 		fprintf(stderr, "Error printing bright file names.\n");
@@ -103,7 +103,8 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         if ((BRIGHT.number = atol(BRIGHT.string)) < 10) {
-            fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
+            fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n",
+                            BRIGHT.string);
             return 0;
         }
 
@@ -158,7 +159,7 @@ void get_bright(Brightness *bright) {
         return;
     }
 
-    if (!fgets(buffer, sizeof(buffer), file)) {
+    if (!fgets(buffer, sizeof (buffer), file)) {
         fprintf(stderr, "Can't read from file.\n");
         (void) fclose(file);
         return;
