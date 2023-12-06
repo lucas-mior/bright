@@ -18,12 +18,10 @@ CFLAGS += -Wall -Wextra
 
 clang: CFLAGS += -Weverything -Wno-unsafe-buffer-usage
 clang: CC = clang
-clang: clean
-clang: release
+clang: clean release
 
 debug: CFLAGS += -g
-debug: clean
-debug: bright
+debug: clean bright
 
 release: CFLAGS += -O2 -flto
 release: bright
