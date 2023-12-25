@@ -16,7 +16,7 @@ all: release
 CFLAGS += -std=c99 -D_DEFAULT_SOURCE
 CFLAGS += -Wall -Wextra
 
-clang: CFLAGS += -Weverything -Wno-unsafe-buffer-usage
+clang: CFLAGS += -Weverything -Wno-unsafe-buffer-usage -Wno-format-nonliteral
 clang: CC = clang
 clang: clean release
 

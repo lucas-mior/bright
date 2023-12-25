@@ -25,6 +25,10 @@ static void get_bright(Brightness *);
 static void save_new(Brightness *, Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
+char *program;
+static int levels[NLEVELS];
+static const char *bright_directory = "/sys/class/backlight/intel_backlight";
+
 int main(int argc, char *argv[]) {
     bool spell_error = true;
     char *program_to_signal;
@@ -32,8 +36,10 @@ int main(int argc, char *argv[]) {
     Brightness old_bright;
     Brightness new_bright;
     uint ic;
-
 	int n, m, p;
+
+    program = argv[0];
+
 
     if ((argc <= 1) || (argc > 3))
         main_usage(stderr);
@@ -67,7 +73,7 @@ int main(int argc, char *argv[]) {
     p = snprintf(new_bright.file, sizeof (new_bright.file),
                 "%s/brightness", bright_directory);
 	if (n < 0 || m < 0 || p < 0) {
-		fprintf(stderr, "Error printing bright file names.\n");
+		error("Error printing bright file names.\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -99,12 +105,11 @@ int main(int argc, char *argv[]) {
     if (program_to_signal) {
         Number BRIGHT;
         if (!(BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
-            fprintf(stderr, "BRIGHT environment variable not set.\n");
+            error("BRIGHT environment variable not set.\n");
             return 0;
         }
         if ((BRIGHT.number = atol(BRIGHT.string)) < 10) {
-            fprintf(stderr, "Invalid BRIGHT environment variable: %s.\n",
-                            BRIGHT.string);
+            error("Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
             return 0;
         }
 
@@ -155,19 +160,19 @@ void get_bright(Brightness *bright) {
     unsigned long aux;
 
     if (!(file = fopen(bright->file, "r"))) {
-        fprintf(stderr, "Can't open file for getting old bright.\n");
+        error("Can't open file for getting old bright.\n");
         return;
     }
 
     if (!fgets(buffer, sizeof (buffer), file)) {
-        fprintf(stderr, "Can't read from file.\n");
+        error("Can't read from file.\n");
         (void) fclose(file);
         return;
     }
 
     aux = strtoul(buffer, &end_pointer, 10);
     if ((aux > INT_MAX) || (end_pointer == buffer)) {
-        fprintf(stderr, "Invalid brightness read from file: %s\n", buffer);
+        error("Invalid brightness read from file: %s\n", buffer);
         (void) fclose(file);
         exit(EXIT_FAILURE);
     }
@@ -181,11 +186,11 @@ void save_new(Brightness *new_bright, Brightness *old_bright) {
     FILE *save;
 
     if (!(save = fopen(new_bright->file, "w"))) {
-        fprintf(stderr, "Can't open file for setting current brightness.\n");
+        error("Can't open file for setting current brightness.\n");
         return;
     }
     if (fprintf(save, "%i\n", levels[new_bright->index]) < 0) {
-        fprintf(stderr, "Can't write to file.\n");
+        error("Can't write to file.\n");
         new_bright->index = old_bright->index;
         (void) fclose(save);
         return;
@@ -203,4 +208,41 @@ void main_usage(FILE *stream) {
                 commands[i].description);
     }
     exit(stream != stdout);
+}
+
+void error(char *format, ...) {
+    int n;
+    va_list args;
+    char buffer[BUFSIZ];
+
+    va_start(args, format);
+    n = vsnprintf(buffer, sizeof (buffer) - 1, format, args);
+    va_end(args);
+
+    if (n < 0) {
+        fprintf(stderr, "Error in vsnprintf()\n");
+        exit(EXIT_FAILURE);
+    }
+
+    buffer[n] = '\0';
+    (void) write(STDERR_FILENO, buffer, (usize) n);
+
+#ifdef DEBUGGING
+    switch (fork()) {
+        char *notifiers[2] = { "dunstify", "notify-send" };
+        case -1:
+            fprintf(stderr, "Error forking: %s\n", strerror(errno));
+            break;
+        case 0:
+            for (uint i = 0; i < LENGTH(notifiers); i += 1) {
+                execlp(notifiers[i], notifiers[i], "-u", "critical", 
+                                     program, buffer, NULL);
+            }
+            fprintf(stderr, "Error trying to exec dunstify.\n");
+            break;
+        default:
+            break;
+    }
+    exit(EXIT_FAILURE);
+#endif
 }

@@ -17,6 +17,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -83,7 +85,7 @@ static const struct Command commands[] = {
 #define ARRAY_LENGTH(x) (sizeof(x) / sizeof(x[0]))
 
 #define NLEVELS 11
-static int levels[NLEVELS];
-static const char *bright_directory = "/sys/class/backlight/intel_backlight";
+extern char *program;
 
 void send_signal(char *, int);
+void error(char *format, ...);

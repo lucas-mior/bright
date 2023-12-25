@@ -25,21 +25,22 @@
 #include <signal.h>
 
 #include "send_signal.h"
+#include "bright.h"
 
 static pid_t check_pid(const char *, const char*);
 
 void send_signal(char *executable, int signal_number) {
     DIR *processes;
-    struct dirent *program;
+    struct dirent *process;
     pid_t pid;
 
     if (!(processes = opendir("/proc"))) {
-        fprintf(stderr, "Error opening /proc: %s\n", strerror(errno));
+        error("Error opening /proc: %s\n", strerror(errno));
         return;
     }
 
-    while ((program = readdir(processes))) {
-        if ((pid = check_pid(executable, program->d_name))) {
+    while ((process = readdir(processes))) {
+        if ((pid = check_pid(executable, process->d_name))) {
             kill(pid, SIGRTMIN+signal_number);
             break;
         }
