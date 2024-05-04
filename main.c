@@ -18,18 +18,19 @@
 #include "bright.h"
 #include "send_signal.c"
 
-static bool between(int, int, int);
-static int find_index(int);
-static void create_levels(int);
-static void get_bright(Brightness *);
-static void save_new(Brightness *, Brightness *);
+static inline bool between(int, int, int);
+static inline int find_index(int);
+static inline void create_levels(int);
+static inline void get_bright(Brightness *);
+static inline void save_new(Brightness *, Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
 char *program;
 static int levels[NLEVELS];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char *argv[]) {
     bool spell_error = true;
     char *program_to_signal;
     Brightness max_bright;
@@ -119,11 +120,13 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-bool between(int a, int x, int b) {
+bool
+between(int a, int x, int b) {
     return x < b && a <= x;
 }
 
-int find_index(int value) {
+int
+find_index(int value) {
     int i = 0;
 
     while (i <= NLEVELS - 2) {
@@ -136,7 +139,8 @@ int find_index(int value) {
     return NLEVELS - 1;
 }
 
-void create_levels(int last) {
+void
+create_levels(int last) {
     int first = last / 60;
     int n = NLEVELS - 2;
     double m = (double) 1 / (double) (n - 1);
@@ -153,7 +157,8 @@ void create_levels(int last) {
     return;
 }
 
-void get_bright(Brightness *bright) {
+void
+get_bright(Brightness *bright) {
     FILE *file = NULL;
     char buffer[16];
     char *end_pointer = NULL;
@@ -182,7 +187,8 @@ void get_bright(Brightness *bright) {
     return;
 }
 
-void save_new(Brightness *new_bright, Brightness *old_bright) {
+void
+save_new(Brightness *new_bright, Brightness *old_bright) {
     FILE *save;
 
     if (!(save = fopen(new_bright->file, "w"))) {
@@ -199,7 +205,8 @@ void save_new(Brightness *new_bright, Brightness *old_bright) {
     return;
 }
 
-void main_usage(FILE *stream) {
+void
+main_usage(FILE *stream) {
     fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
     fprintf(stream, "Available commands:\n");
     for (uint i = 0; i < ARRAY_LENGTH(commands); i += 1) {
@@ -210,7 +217,8 @@ void main_usage(FILE *stream) {
     exit(stream != stdout);
 }
 
-void error(char *format, ...) {
+void
+error(char *format, ...) {
     int n;
     va_list args;
     char buffer[BUFSIZ];
