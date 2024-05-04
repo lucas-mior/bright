@@ -31,7 +31,8 @@
 
 static pid_t check_pid(const char *, const char*);
 
-void send_signal(char *executable, int signal_number) {
+void
+send_signal(char *executable, int signal_number) {
     DIR *processes;
     struct dirent *process;
     pid_t pid;
@@ -52,7 +53,8 @@ void send_signal(char *executable, int signal_number) {
     return;
 }
 
-pid_t check_pid(const char *executable, const char *number) {
+pid_t
+check_pid(const char *executable, const char *number) {
     static char buffer[256];
     static char command[256];
     int pid;
