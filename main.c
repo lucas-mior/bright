@@ -16,7 +16,7 @@
  */
 
 #include "bright.h"
-#include "send_signal.h"
+#include "send_signal.c"
 
 static bool between(int, int, int);
 static int find_index(int);
@@ -138,7 +138,7 @@ int find_index(int value) {
 
 void create_levels(int last) {
     int first = last / 60;
-    int n = NLEVELS-2;
+    int n = NLEVELS - 2;
     double m = (double) 1 / (double) (n - 1);
     double quotient = pow((double) last / (double) first, m);
 

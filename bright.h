@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef BRIGHT_H
+#define BRIGHT_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -89,3 +92,5 @@ extern char *program;
 
 void send_signal(char *, int);
 void error(char *format, ...);
+
+#endif

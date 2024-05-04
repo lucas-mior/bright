@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef SEND_SIGNAL_C
+#define SEND_SIGNAL_C
+
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +27,6 @@
 #include <sys/types.h>
 #include <signal.h>
 
-#include "send_signal.h"
 #include "bright.h"
 
 static pid_t check_pid(const char *, const char*);
@@ -76,3 +78,5 @@ pid_t check_pid(const char *executable, const char *number) {
     fclose(cmdline);
     return 0;
 }
+
+#endif
