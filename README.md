@@ -22,6 +22,6 @@ Edit `bright.c` and recompile.
 ```
 $ git clone https://github.com/lucas-mior/bright
 $ cd bright
-$ make
-$ sudo make install
+$ ./build.sh
+$ sudo ./build.sh install
 ```
