@@ -107,17 +107,17 @@ main(int argc, char *argv[]) {
         Number BRIGHT;
         if (!(BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
             error("BRIGHT environment variable not set.\n");
-            return 0;
+            exit(EXIT_FAILURE);
         }
         if ((BRIGHT.number = atol(BRIGHT.string)) < 10) {
             error("Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
-            return 0;
+            exit(EXIT_FAILURE);
         }
 
         send_signal(program_to_signal, (int) BRIGHT.number);
     }
 
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
 bool
