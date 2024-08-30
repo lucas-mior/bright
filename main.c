@@ -104,17 +104,18 @@ main(int argc, char *argv[]) {
     save_new(&new_bright, &old_bright);
 
     if (program_to_signal) {
-        Number BRIGHT;
-        if (!(BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
-            error("BRIGHT environment variable not set.\n");
+        Number DWMBLOCKS2_BRIGHT;
+        if (!(DWMBLOCKS2_BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
+            error("%s environment variable not set.\n", "DWMBLOCKS2_BRIGHT");
             exit(EXIT_FAILURE);
         }
-        if ((BRIGHT.number = atol(BRIGHT.string)) < 10) {
-            error("Invalid BRIGHT environment variable: %s.\n", BRIGHT.string);
+        if ((DWMBLOCKS2_BRIGHT.number = atol(DWMBLOCKS2_BRIGHT.string)) < 10) {
+            error("Invalid BRIGHT environment variable: %s.\n",
+                   DWMBLOCKS2_BRIGHT.string);
             exit(EXIT_FAILURE);
         }
 
-        send_signal(program_to_signal, (int) BRIGHT.number);
+        send_signal(program_to_signal, (int) DWMBLOCKS2_BRIGHT.number);
     }
 
     exit(EXIT_SUCCESS);
@@ -165,12 +166,12 @@ get_bright(Brightness *bright) {
     unsigned long aux;
 
     if (!(file = fopen(bright->file, "r"))) {
-        error("Can't open file for getting old bright.\n");
+        error("Can't open file for getting old bright: %s\n", strerror(errno));
         return;
     }
 
     if (!fgets(buffer, sizeof (buffer), file)) {
-        error("Can't read from file.\n");
+        error("Can't read from file: %s\n", strerror(errno));
         (void) fclose(file);
         return;
     }
@@ -192,7 +193,8 @@ save_new(Brightness *new_bright, Brightness *old_bright) {
     FILE *save;
 
     if (!(save = fopen(new_bright->file, "w"))) {
-        error("Can't open file for setting current brightness.\n");
+        error("Can't open file for setting current brightness: %s\n",
+              strerror(errno));
         return;
     }
     if (fprintf(save, "%i\n", levels[new_bright->index]) < 0) {
