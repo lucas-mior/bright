@@ -82,6 +82,7 @@ struct Command {
 static const struct Command commands[] = {
     [COMMAND_MORE] =  {"-m", "--more",  "more brightness"          },
     [COMMAND_LESS] =  {"-l", "--less",  "less brightness"          },
+    [COMMAND_FULL] =  {"-f", "--full",  "full brightness"          },
     [COMMAND_PRINT] = {"-p", "--print", "print current brightness" },
     [COMMAND_HELP]  = {"-h", "--help",  "print this help message"  },
 };

@@ -69,7 +69,10 @@ main(int argc, char *argv[]) {
         main_usage(stderr);
 
     out:
-    program_to_signal = argv[2];
+    if (argc >= 3)
+        program_to_signal = argv[2];
+    else
+        program_to_signal = NULL;
 
     n = snprintf(max_bright.file, sizeof (max_bright.file),
                 "%s/max_brightness", bright_directory);
@@ -104,7 +107,7 @@ main(int argc, char *argv[]) {
             new_bright.index += 1;
         break;
     case COMMAND_FULL:
-        new_bright.index += NLEVELS - 1;
+        new_bright.index = NLEVELS - 1;
         break;
     }
 
