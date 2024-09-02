@@ -143,6 +143,7 @@ main(int argc, char *argv[]) {
 
     if (program_to_signal) {
         Number DWMBLOCKS2_BRIGHT;
+
         if (!(DWMBLOCKS2_BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
             error("%s environment variable not set.\n", "DWMBLOCKS2_BRIGHT");
             exit(EXIT_FAILURE);
