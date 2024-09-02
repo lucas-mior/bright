@@ -22,7 +22,6 @@ static inline bool between(int, int, int);
 static inline int find_index(int);
 static inline void create_levels(int);
 static inline void get_bright(Brightness *);
-static inline void save_new(Brightness *, Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
 char *program;
@@ -42,8 +41,13 @@ main(int argc, char *argv[]) {
     program = argv[0];
 
 
-    if ((argc <= 1) || (argc > 3))
+    if (argc <= 1) {
+        ic = COMMAND_FULL;
+        goto out;
+    }
+    if (argc > 3) {
         main_usage(stderr);
+    }
 
     for (ic = 0; ic < ARRAY_LENGTH(commands); ic += 1) {
         if (!strcmp(argv[1], commands[ic].shortname)
@@ -99,9 +103,27 @@ main(int argc, char *argv[]) {
         if (old_bright.index < NLEVELS - 1)
             new_bright.index += 1;
         break;
+    case COMMAND_FULL:
+        new_bright.index += NLEVELS - 1;
+        break;
     }
 
-    save_new(&new_bright, &old_bright);
+    {
+        FILE *save;
+
+        if (!(save = fopen(new_bright.file, "w"))) {
+            error("Can't open file for setting current brightness: %s\n",
+                  strerror(errno));
+            exit(EXIT_FAILURE);
+        }
+        if (fprintf(save, "%i\n", levels[new_bright.index]) < 0) {
+            error("Can't write to file.\n");
+            new_bright.index = old_bright.index;
+            (void) fclose(save);
+            exit(EXIT_FAILURE);
+        }
+        (void) fclose(save);
+    }
 
     if (program_to_signal) {
         Number DWMBLOCKS2_BRIGHT;
@@ -185,25 +207,6 @@ get_bright(Brightness *bright) {
     bright->absolute = (int) aux;
 
     (void) fclose(file);
-    return;
-}
-
-void
-save_new(Brightness *new_bright, Brightness *old_bright) {
-    FILE *save;
-
-    if (!(save = fopen(new_bright->file, "w"))) {
-        error("Can't open file for setting current brightness: %s\n",
-              strerror(errno));
-        return;
-    }
-    if (fprintf(save, "%i\n", levels[new_bright->index]) < 0) {
-        error("Can't write to file.\n");
-        new_bright->index = old_bright->index;
-        (void) fclose(save);
-        return;
-    }
-    (void) fclose(save);
     return;
 }
 

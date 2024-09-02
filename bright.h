@@ -68,6 +68,7 @@ typedef struct Brightness {
 enum {
     COMMAND_MORE = 0,
     COMMAND_LESS,
+    COMMAND_FULL,
     COMMAND_HELP,
     COMMAND_PRINT,
 };
