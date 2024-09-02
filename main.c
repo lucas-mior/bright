@@ -20,7 +20,6 @@
 
 static inline bool between(int, int, int);
 static inline int find_index(int);
-static inline void create_levels(int);
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
@@ -86,7 +85,21 @@ main(int argc, char *argv[]) {
 	}
 
     get_bright(&max_bright);
-    create_levels(max_bright.absolute);
+    {
+        int last = max_bright.absolute;
+        int first = last / 60;
+        int n = NLEVELS - 2;
+        double m = (double) 1 / (double) (n - 1);
+        double quotient = pow((double) last / (double) first, m);
+
+        int i;
+        levels[i = 0] = 0;
+        levels[i = 1] = 1;
+        levels[i = 2] = first;
+        for (i = 3; i < NLEVELS - 1; i += 1)
+            levels[i] = (int) ((double) levels[i - 1] * quotient);
+        levels[i = NLEVELS - 1] = last;
+    }
 
     get_bright(&old_bright);
     old_bright.index = find_index(old_bright.absolute);
@@ -163,24 +176,6 @@ find_index(int value) {
     }
 
     return NLEVELS - 1;
-}
-
-void
-create_levels(int last) {
-    int first = last / 60;
-    int n = NLEVELS - 2;
-    double m = (double) 1 / (double) (n - 1);
-    double quotient = pow((double) last / (double) first, m);
-
-    int i;
-    levels[i = 0] = 0;
-    levels[i = 1] = 1;
-    levels[i = 2] = first;
-    for (i = 3; i < NLEVELS - 1; i += 1)
-        levels[i] = (int) ((double) levels[i - 1] * quotient);
-    levels[i = NLEVELS - 1] = last;
-
-    return;
 }
 
 void
