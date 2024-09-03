@@ -35,7 +35,7 @@ main(int argc, char *argv[]) {
     Brightness old_bright;
     Brightness new_bright;
     uint ic;
-	int n, m, p;
+	int n1, n2, n3;
 
     program = argv[0];
 
@@ -73,14 +73,14 @@ main(int argc, char *argv[]) {
     else
         program_to_signal = NULL;
 
-    n = snprintf(max_bright.file, sizeof(max_bright.file),
-                "%s/max_brightness", bright_directory);
-    m = snprintf(old_bright.file, sizeof(old_bright.file),
-                "%s/brightness", bright_directory);
-    p = snprintf(new_bright.file, sizeof(new_bright.file),
-                "%s/brightness", bright_directory);
+    n1 = snprintf(max_bright.file, sizeof(max_bright.file),
+                 "%s/max_brightness", bright_directory);
+    n2 = snprintf(old_bright.file, sizeof(old_bright.file),
+                 "%s/brightness", bright_directory);
+    n3 = snprintf(new_bright.file, sizeof(new_bright.file),
+                 "%s/brightness", bright_directory);
 
-	if (n < 0 || m < 0 || p < 0) {
+	if (n1 < 0 || n2 < 0 || n3 < 0) {
 		error("Error printing bright file names.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -123,6 +123,9 @@ main(int argc, char *argv[]) {
     case COMMAND_FULL:
         new_bright.index = NLEVELS - 1;
         break;
+    default:
+        fprintf(stderr, "Unexpected ic value: %d\n", ic); 
+        exit(EXIT_FAILURE);
     }
 
     {
@@ -242,15 +245,12 @@ error(char *format, ...) {
 
 #ifdef DEBUGGING
     switch (fork()) {
-        char *notifiers[2] = { "dunstify", "notify-send" };
         case -1:
             fprintf(stderr, "Error forking: %s\n", strerror(errno));
             break;
         case 0:
-            for (uint i = 0; i < LENGTH(notifiers); i += 1) {
-                execlp(notifiers[i], notifiers[i], "-u", "critical", 
-                                     program, buffer, NULL);
-            }
+            execlp("dunstify", "dunstify", "-u", "critical",
+                               program, buffer, NULL);
             fprintf(stderr, "Error trying to exec dunstify.\n");
             break;
         default:
