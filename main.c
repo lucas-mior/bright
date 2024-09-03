@@ -79,6 +79,7 @@ main(int argc, char *argv[]) {
                 "%s/brightness", bright_directory);
     p = snprintf(new_bright.file, sizeof(new_bright.file),
                 "%s/brightness", bright_directory);
+
 	if (n < 0 || m < 0 || p < 0) {
 		error("Error printing bright file names.\n");
 		exit(EXIT_FAILURE);
@@ -110,7 +111,7 @@ main(int argc, char *argv[]) {
     switch (ic) {
     case COMMAND_PRINT:
         printf("🔆 %i", old_bright.index);
-        exit(0);
+        exit(EXIT_SUCCESS);
     case COMMAND_LESS:
         if (0 < old_bright.index)
             new_bright.index -= 1;
@@ -132,7 +133,7 @@ main(int argc, char *argv[]) {
                   strerror(errno));
             exit(EXIT_FAILURE);
         }
-        if (fprintf(save, "%i\n", levels[new_bright.index]) < 0) {
+        if (fprintf(save, "%d\n", levels[new_bright.index]) < 0) {
             error("Can't write to file.\n");
             new_bright.index = old_bright.index;
             (void) fclose(save);
