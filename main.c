@@ -245,16 +245,15 @@ error(char *format, ...) {
 
 #ifdef DEBUGGING
     switch (fork()) {
-        case -1:
-            fprintf(stderr, "Error forking: %s\n", strerror(errno));
-            break;
-        case 0:
-            execlp("dunstify", "dunstify", "-u", "critical",
-                               program, buffer, NULL);
-            fprintf(stderr, "Error trying to exec dunstify.\n");
-            break;
-        default:
-            break;
+    case -1:
+        fprintf(stderr, "Error forking: %s\n", strerror(errno));
+        break;
+    case 0:
+        execlp("dunstify", "dunstify", "-u", "critical", program, buffer, NULL);
+        fprintf(stderr, "Error trying to exec dunstify.\n");
+        break;
+    default:
+        break;
     }
     exit(EXIT_FAILURE);
 #endif
