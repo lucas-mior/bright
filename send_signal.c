@@ -65,6 +65,7 @@ check_pid(const char *executable, const char *number) {
 
     snprintf(buffer, sizeof (buffer), "/proc/%d/cmdline", pid);
     buffer[sizeof (buffer) - 1] = '\0';
+
     if (!(cmdline = fopen(buffer, "r")))
         return 0;
     if (!fgets(command, sizeof(command), cmdline)) {
@@ -72,6 +73,7 @@ check_pid(const char *executable, const char *number) {
         return 0;
     }
     command[strcspn(buffer, "\n")] = '\0';
+
     if (!strcmp(command, executable)) {
         fclose(cmdline);
         return pid;

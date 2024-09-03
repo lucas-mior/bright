@@ -73,11 +73,11 @@ main(int argc, char *argv[]) {
     else
         program_to_signal = NULL;
 
-    n = snprintf(max_bright.file, sizeof (max_bright.file),
+    n = snprintf(max_bright.file, sizeof(max_bright.file),
                 "%s/max_brightness", bright_directory);
-    m = snprintf(old_bright.file, sizeof (old_bright.file),
+    m = snprintf(old_bright.file, sizeof(old_bright.file),
                 "%s/brightness", bright_directory);
-    p = snprintf(new_bright.file, sizeof (new_bright.file),
+    p = snprintf(new_bright.file, sizeof(new_bright.file),
                 "%s/brightness", bright_directory);
 	if (n < 0 || m < 0 || p < 0) {
 		error("Error printing bright file names.\n");
@@ -191,7 +191,7 @@ get_bright(Brightness *bright) {
         return;
     }
 
-    if (!fgets(buffer, sizeof (buffer), file)) {
+    if (!fgets(buffer, sizeof(buffer), file)) {
         error("Can't read from file: %s\n", strerror(errno));
         (void) fclose(file);
         return;
@@ -228,7 +228,7 @@ error(char *format, ...) {
     char buffer[BUFSIZ];
 
     va_start(args, format);
-    n = vsnprintf(buffer, sizeof (buffer) - 1, format, args);
+    n = vsnprintf(buffer, sizeof(buffer) - 1, format, args);
     va_end(args);
 
     if (n < 0) {
