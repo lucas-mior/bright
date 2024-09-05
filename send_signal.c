@@ -47,7 +47,6 @@ send_signal(char *executable, int signal_number) {
         int n;
         int pid;
         int cmdline;
-        ssize_t r;
 
         if ((pid = atoi(process->d_name)) <= 0)
             continue;
@@ -59,7 +58,7 @@ send_signal(char *executable, int signal_number) {
 
         if ((cmdline = open(buffer, O_RDONLY)) < 0)
             continue;
-        if ((r = read(cmdline, command, sizeof(command))) <= 0) {
+        if (read(cmdline, command, sizeof(command)) <= 0) {
             close(cmdline);
             continue;
         }
