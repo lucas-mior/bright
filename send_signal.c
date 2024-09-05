@@ -44,6 +44,7 @@ send_signal(char *executable, int signal_number) {
     while ((process = readdir(processes))) {
         static char buffer[256];
         static char command[256];
+        int n;
         int pid;
         int cmdline;
         ssize_t r;
