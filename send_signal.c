@@ -26,6 +26,8 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "bright.h"
 
@@ -43,7 +45,8 @@ send_signal(char *executable, int signal_number) {
         static char buffer[256];
         static char command[256];
         int pid;
-        FILE *cmdline;
+        int cmdline;
+        ssize_t r;
 
         if ((pid = atoi(process->d_name)) <= 0)
             continue;
@@ -51,18 +54,18 @@ send_signal(char *executable, int signal_number) {
         snprintf(buffer, sizeof (buffer), "/proc/%s/cmdline", process->d_name);
         buffer[sizeof (buffer) - 1] = '\0';
 
-        if (!(cmdline = fopen(buffer, "r")))
+        if ((cmdline = open(buffer, O_RDONLY)) < 0)
             continue;
-        if (!fgets(command, sizeof(command), cmdline)) {
-            fclose(cmdline);
+        if ((r = read(cmdline, command, sizeof(command))) <= 0) {
+            close(cmdline);
             continue;
         }
-        command[strcspn(buffer, "\n")] = '\0';
+        command[strcspn(command, "\n")] = '\0';
 
         if (!strcmp(command, executable))
-            kill(pid, SIGRTMIN+signal_number);
+            kill(pid, signal_number);
 
-        fclose(cmdline);
+        close(cmdline);
     }
 
     closedir(processes);
