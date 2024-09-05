@@ -51,8 +51,10 @@ send_signal(char *executable, int signal_number) {
         if ((pid = atoi(process->d_name)) <= 0)
             continue;
 
-        snprintf(buffer, sizeof (buffer), "/proc/%s/cmdline", process->d_name);
-        buffer[sizeof (buffer) - 1] = '\0';
+        n = snprintf(buffer, sizeof (buffer),
+                     "/proc/%s/cmdline", process->d_name);
+        if (n <= 0)
+            continue;
 
         if ((cmdline = open(buffer, O_RDONLY)) < 0)
             continue;
