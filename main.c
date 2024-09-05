@@ -158,7 +158,8 @@ main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
 
-        send_signal(program_to_signal, SIGRTMIN + DWMBLOCKS2_BRIGHT.number);
+        send_signal(program_to_signal,
+                    (int)(SIGRTMIN + DWMBLOCKS2_BRIGHT.number));
     }
 
     exit(EXIT_SUCCESS);
