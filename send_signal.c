@@ -60,7 +60,6 @@ send_signal(char *executable, int signal_number) {
             close(cmdline);
             continue;
         }
-        command[strcspn(command, "\n")] = '\0';
 
         if (!strcmp(command, executable))
             kill(pid, signal_number);
