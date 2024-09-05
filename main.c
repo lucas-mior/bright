@@ -29,8 +29,6 @@ static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
 int
 main(int argc, char *argv[]) {
-    send_signal("sleep", SIGKILL);
-    exit(0);
     bool spell_error = true;
     char *program_to_signal;
     Brightness max_bright;
