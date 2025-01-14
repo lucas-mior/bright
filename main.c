@@ -18,7 +18,6 @@
 #include "bright.h"
 #include "send_signal.c"
 
-static inline bool between(int, int, int);
 static inline int find_index(int);
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
@@ -165,20 +164,14 @@ main(int argc, char *argv[]) {
     exit(EXIT_SUCCESS);
 }
 
-bool
-between(int a, int x, int b) {
-    return x < b && a <= x;
-}
-
 int
 find_index(int value) {
     int i = 0;
 
     while (i <= (NLEVELS - 2)) {
-        if (between(levels[i], value, levels[i + 1]))
+        if ((levels[i] < value) && (value <= levels[i + 1]))
             return i;
-        else
-            i += 1;
+        i += 1;
     }
 
     return NLEVELS - 1;
