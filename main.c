@@ -174,7 +174,7 @@ int
 find_index(int value) {
     int i = 0;
 
-    while (i <= NLEVELS - 2) {
+    while (i <= (NLEVELS - 2)) {
         if (between(levels[i], value, levels[i + 1]))
             return i;
         else
