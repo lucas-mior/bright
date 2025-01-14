@@ -18,7 +18,6 @@
 #include "bright.h"
 #include "send_signal.c"
 
-static inline int find_index(int);
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
@@ -102,7 +101,16 @@ main(int argc, char *argv[]) {
     }
 
     get_bright(&old_bright);
-    old_bright.index = find_index(old_bright.absolute);
+
+    for (int i = 0; i <= (NLEVELS - 1); i += 1) {
+        if ((levels[i] < old_bright.absolute)
+             && (old_bright.absolute <= levels[i + 1])) {
+            old_bright.index = i;
+            break;
+        }
+        old_bright.index = i;
+    }
+    printf("old_bright.index: %d\n", old_bright.index);
 
     new_bright.absolute = old_bright.absolute;
     new_bright.index = old_bright.index;
@@ -162,19 +170,6 @@ main(int argc, char *argv[]) {
     }
 
     exit(EXIT_SUCCESS);
-}
-
-int
-find_index(int value) {
-    int i = 0;
-
-    while (i <= (NLEVELS - 2)) {
-        if ((levels[i] < value) && (value <= levels[i + 1]))
-            return i;
-        i += 1;
-    }
-
-    return NLEVELS - 1;
 }
 
 void
