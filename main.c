@@ -195,7 +195,7 @@ get_bright(Brightness *bright) {
         return;
     }
 
-    if ((r = read(file, buffer, sizeof(buffer))) <= 0) {
+    if ((r = read(file, buffer, sizeof(buffer) - 1)) <= 0) {
         error("Can't read from file.");
         if (r < 0)
             error(": %s", strerror(errno));
