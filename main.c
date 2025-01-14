@@ -139,10 +139,10 @@ main(int argc, char *argv[]) {
         if (fprintf(save, "%d\n", levels[new_bright.index]) < 0) {
             error("Can't write to file.\n");
             new_bright.index = old_bright.index;
-            (void) fclose(save);
+            fclose(save);
             exit(EXIT_FAILURE);
         }
-        (void) fclose(save);
+        fclose(save);
     }
 
     if (program_to_signal) {
@@ -243,7 +243,7 @@ error(char *format, ...) {
     }
 
     buffer[n] = '\0';
-    (void) write(STDERR_FILENO, buffer, (usize) n);
+    write(STDERR_FILENO, buffer, (usize) n);
 
 #ifdef DEBUGGING
     switch (fork()) {
