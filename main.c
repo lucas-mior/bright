@@ -186,31 +186,36 @@ find_index(int value) {
 
 void
 get_bright(Brightness *bright) {
-    FILE *file = NULL;
-    char buffer[16];
     char *end_pointer = NULL;
-    unsigned long aux;
+    char buffer[16];
+    int file;
+    ulong aux;
+    ssize_t r;
 
-    if (!(file = fopen(bright->file, "r"))) {
+    if ((file = open(bright->file, O_RDONLY)) < 0) {
         error("Can't open file for getting old bright: %s\n", strerror(errno));
         return;
     }
 
-    if (!fgets(buffer, sizeof(buffer), file)) {
-        error("Can't read from file: %s\n", strerror(errno));
-        (void) fclose(file);
+    if ((r = read(file, buffer, sizeof(buffer))) <= 0) {
+        error("Can't read from file.");
+        if (r < 0)
+            error(": %s", strerror(errno));
+        error(".\n");
+        close(file);
         return;
     }
+    buffer[r] = '\0';
 
     aux = strtoul(buffer, &end_pointer, 10);
     if ((aux > INT_MAX) || (end_pointer == buffer)) {
         error("Invalid brightness read from file: %s\n", buffer);
-        (void) fclose(file);
+        close(file);
         exit(EXIT_FAILURE);
     }
     bright->absolute = (int) aux;
 
-    (void) fclose(file);
+    close(file);
     return;
 }
 
