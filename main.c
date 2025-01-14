@@ -186,10 +186,8 @@ find_index(int value) {
 
 void
 get_bright(Brightness *bright) {
-    char *end_pointer = NULL;
     char buffer[16];
     int file;
-    ulong aux;
     ssize_t r;
 
     if ((file = open(bright->file, O_RDONLY)) < 0) {
@@ -207,13 +205,11 @@ get_bright(Brightness *bright) {
     }
     buffer[r] = '\0';
 
-    aux = strtoul(buffer, &end_pointer, 10);
-    if ((aux > INT_MAX) || (end_pointer == buffer)) {
-        error("Invalid brightness read from file: %s\n", buffer);
+    if ((bright->absolute = atoi(buffer)) <= 0) {
+        error("Invalid brightness read from %s: %s\n", bright->file, buffer);
         close(file);
         exit(EXIT_FAILURE);
     }
-    bright->absolute = (int) aux;
 
     close(file);
     return;
