@@ -102,7 +102,7 @@ main(int argc, char *argv[]) {
 
     get_bright(&old_bright);
 
-    for (int i = 0; i <= (NLEVELS - 1); i += 1) {
+    for (int i = 0; i < NLEVELS; i += 1) {
         old_bright.index = i;
         if ((levels[i] <= old_bright.absolute)
              && (old_bright.absolute < levels[i + 1])) {
