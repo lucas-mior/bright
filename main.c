@@ -32,7 +32,7 @@ main(int argc, char *argv[]) {
     Brightness max_bright;
     Brightness old_bright;
     Brightness new_bright;
-    uint ic;
+    int ic;
 	int n1, n2, n3;
 
     program = argv[0];
@@ -129,7 +129,7 @@ main(int argc, char *argv[]) {
         new_bright.index = NLEVELS - 1;
         break;
     default:
-        fprintf(stderr, "Unexpected ic value: %d\n", ic); 
+        fprintf(stderr, "Unexpected value: %d\n", ic); 
         exit(EXIT_FAILURE);
     }
 
