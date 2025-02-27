@@ -191,12 +191,7 @@ get_bright(Brightness *bright) {
     }
     buffer[r] = '\0';
 
-    if ((bright->absolute = atoi(buffer)) <= 0) {
-        error("Invalid brightness read from %s: %s\n", bright->file, buffer);
-        close(file);
-        exit(EXIT_FAILURE);
-    }
-
+    bright->absolute = atoi(buffer);
     close(file);
     return;
 }
