@@ -25,6 +25,30 @@ char *program;
 static int levels[NLEVELS];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
+#define SNPRINTF(BUFFER, FORMAT, ...) do { \
+    snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__); \
+} while (0)
+
+char *
+snprintf2(char *buffer, size_t size, char *format, ...) {
+    int n;
+    va_list args;
+
+    va_start(args, format);
+    n = snprintf(buffer, size, format, args);
+    va_end(args);
+
+    if (n > (int)size) {
+        error("Error in snprintf: Too large string.\n");
+        exit(EXIT_FAILURE);
+    }
+    if (n <= 0) {
+        error("Error in snprintf.\n");
+        exit(EXIT_FAILURE);
+    }
+    return buffer;
+}
+
 int
 main(int argc, char *argv[]) {
     bool spell_error = true;
@@ -33,7 +57,6 @@ main(int argc, char *argv[]) {
     Brightness old_bright;
     Brightness new_bright;
     int ic;
-	int n1, n2, n3;
 
     program = argv[0];
 
@@ -71,17 +94,9 @@ main(int argc, char *argv[]) {
     else
         program_to_signal = NULL;
 
-    n1 = snprintf(max_bright.file, sizeof(max_bright.file),
-                 "%s/max_brightness", bright_directory);
-    n2 = snprintf(old_bright.file, sizeof(old_bright.file),
-                 "%s/brightness", bright_directory);
-    n3 = snprintf(new_bright.file, sizeof(new_bright.file),
-                 "%s/brightness", bright_directory);
-
-	if (n1 < 0 || n2 < 0 || n3 < 0) {
-		error("Error printing bright file names.\n");
-		exit(EXIT_FAILURE);
-	}
+    SNPRINTF(max_bright.file, "%s/max_brightness", bright_directory);
+    SNPRINTF(old_bright.file, "%s/brightness", bright_directory);
+    SNPRINTF(new_bright.file, "%s/brightness", bright_directory);
 
     get_bright(&max_bright);
     {
