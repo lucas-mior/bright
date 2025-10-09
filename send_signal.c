@@ -63,8 +63,12 @@ send_signal(char *executable, int signal_number) {
             continue;
         }
 
-        if (!strcmp(command, executable))
-            kill(pid, signal_number);
+        if (!strcmp(command, executable)) {
+            if (kill(pid, signal_number) < 0) {
+                error("Error sending signal %d to %s (pid %d): %s.\n",
+                      signal_number, executable, pid, strerror(errno));
+            }
+        }
 
         close(cmdline);
     }
