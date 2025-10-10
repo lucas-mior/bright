@@ -20,15 +20,10 @@
 
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
-static char *snprintf2(char *, size_t, char *, ...);
 
 char *program;
 static int levels[NLEVELS];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";
-
-#define SNPRINTF(BUFFER, FORMAT, ...) do { \
-    snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__); \
-} while (0)
 
 int
 main(int argc, char *argv[]) {
@@ -204,26 +199,6 @@ main_usage(FILE *stream) {
     exit(stream != stdout);
 }
 
-char *
-snprintf2(char *buffer, size_t size, char *format, ...) {
-    int n;
-    va_list args;
-
-    va_start(args, format);
-    n = vsnprintf(buffer, size, format, args);
-    va_end(args);
-
-    if (n >= (int)size) {
-        error("Error in snprintf: Too large string.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (n <= 0) {
-        error("Error in snprintf.\n");
-        exit(EXIT_FAILURE);
-    }
-    return buffer;
-}
-
 void
 error(char *format, ...) {
     int n;
@@ -238,8 +213,11 @@ error(char *format, ...) {
         fprintf(stderr, "Error in vsnprintf()\n");
         exit(EXIT_FAILURE);
     }
+    if (n >= (int)sizeof(buffer)) {
+        fprintf(stderr, "Error in vsnprintf(): too small buffer\n");
+        exit(EXIT_FAILURE);
+    }
 
-    buffer[n] = '\0';
     write(STDERR_FILENO, buffer, (usize) n);
 
 #ifdef DEBUGGING

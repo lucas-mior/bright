@@ -44,17 +44,13 @@ send_signal(char *executable, int signal_number) {
     while ((process = readdir(processes))) {
         static char buffer[256];
         static char command[256];
-        int n;
         int pid;
         int cmdline;
 
         if ((pid = atoi(process->d_name)) <= 0)
             continue;
 
-        n = snprintf(buffer, sizeof(buffer),
-                     "/proc/%s/cmdline", process->d_name);
-        if (n <= 0)
-            continue;
+        SNPRINTF(buffer, "/proc/%s/cmdline", process->d_name);
 
         if ((cmdline = open(buffer, O_RDONLY)) < 0)
             continue;
