@@ -177,7 +177,7 @@ get_bright(Brightness *bright) {
         return;
     }
 
-    if ((r = read(file, buffer, sizeof(buffer) - 1)) <= 0) {
+    if ((r = read(file, buffer, sizeof(buffer))) <= 0) {
         error("Can't read from file.");
         if (r < 0)
             error(": %s", strerror(errno));
@@ -231,7 +231,7 @@ error(char *format, ...) {
     char buffer[BUFSIZ];
 
     va_start(args, format);
-    n = vsnprintf(buffer, sizeof(buffer) - 1, format, args);
+    n = vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
 
     if (n < 0) {
