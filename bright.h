@@ -92,8 +92,8 @@ static const struct Command commands[] = {
 #define NLEVELS 11
 extern char *program;
 
-void send_signal(char *, int);
-void error(char *format, ...);
+static void send_signal(char *, int);
+static void error(char *format, ...);
 static char *snprintf2(char *, size_t, char *, ...);
 
 #define SNPRINTF(BUFFER, FORMAT, ...) \
