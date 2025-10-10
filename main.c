@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <errno.h>
+#include <math.h>
 #include "bright.h"
 #include "send_signal.c"
 

@@ -25,11 +25,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <errno.h>
-#include <signal.h>
 #include <limits.h>
-#include <math.h>
-#include <signal.h>
 #include <sys/types.h>
 #include <linux/limits.h>
 
