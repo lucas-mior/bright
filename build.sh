@@ -27,7 +27,7 @@ program="bright"
 
 CFLAGS="$CFLAGS -std=c99 -D_DEFAULT_SOURCE "
 CFLAGS="$CFLAGS -Wextra -Wall -Wno-disabled-macro-expansion -Wno-unused-macros"
-CFLAGS="$CFLAGS -Wno-unused-function"
+CFLAGS="$CFLAGS -Wno-unused-function -Wno-constant-logical-operand"
 LDFLAGS="$LDFLAGS -lm "
 
 CC=${CC:-cc}
