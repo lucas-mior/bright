@@ -88,31 +88,9 @@ static const struct Command commands[] = {
 #define NLEVELS 11
 extern char *program;
 
-static void send_signal(char *, int);
-static void error(char *format, ...);
-static char *snprintf2(char *, size_t, char *, ...);
-
+#ifndef SNPRINTF
 #define SNPRINTF(BUFFER, FORMAT, ...) \
     snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
-
-char *
-snprintf2(char *buffer, size_t size, char *format, ...) {
-    int n;
-    va_list args;
-
-    va_start(args, format);
-    n = vsnprintf(buffer, size, format, args);
-    va_end(args);
-
-    if (n <= 0) {
-        error("Error in snprintf.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (n >= (int)size) {
-        error("Error in snprintf: Too large string.\n");
-        exit(EXIT_FAILURE);
-    }
-    return buffer;
-}
+#endif
 
 #endif

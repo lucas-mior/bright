@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <math.h>
 #include "bright.h"
-#include "send_signal.c"
+#include "util.c"
 
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
@@ -199,41 +199,4 @@ main_usage(FILE *stream) {
                 commands[i].description);
     }
     exit(stream != stdout);
-}
-
-void
-error(char *format, ...) {
-    int n;
-    va_list args;
-    char buffer[BUFSIZ];
-
-    va_start(args, format);
-    n = vsnprintf(buffer, sizeof(buffer), format, args);
-    va_end(args);
-
-    if (n < 0) {
-        fprintf(stderr, "Error in vsnprintf()\n");
-        exit(EXIT_FAILURE);
-    }
-    if (n >= (int)sizeof(buffer)) {
-        fprintf(stderr, "Error in vsnprintf(): too small buffer\n");
-        exit(EXIT_FAILURE);
-    }
-
-    write(STDERR_FILENO, buffer, (usize) n);
-
-#ifdef DEBUGGING
-    switch (fork()) {
-    case -1:
-        fprintf(stderr, "Error forking: %s\n", strerror(errno));
-        break;
-    case 0:
-        execlp("dunstify", "dunstify", "-u", "critical", program, buffer, NULL);
-        fprintf(stderr, "Error trying to exec dunstify.\n");
-        break;
-    default:
-        break;
-    }
-    exit(EXIT_FAILURE);
-#endif
 }
