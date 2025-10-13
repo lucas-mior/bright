@@ -47,7 +47,7 @@ main(int argc, char *argv[]) {
         main_usage(stderr);
     }
 
-    for (ic = 0; ic < ARRAY_LENGTH(commands); ic += 1) {
+    for (ic = 0; ic < LENGTH(commands); ic += 1) {
         if (!strcmp(argv[1], commands[ic].shortname)
             || !strcmp(argv[1], commands[ic].longname)) {
             spell_error = false;
@@ -192,7 +192,7 @@ void
 main_usage(FILE *stream) {
     fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
     fprintf(stream, "Available commands:\n");
-    for (uint i = 0; i < ARRAY_LENGTH(commands); i += 1) {
+    for (uint i = 0; i < LENGTH(commands); i += 1) {
         fprintf(stream, "%s | %-*s : %s\n",
                 commands[i].shortname, 8, commands[i].longname, 
                 commands[i].description);
