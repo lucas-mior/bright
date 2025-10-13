@@ -38,7 +38,6 @@ main(int argc, char *argv[]) {
 
     program = argv[0];
 
-
     if (argc <= 1) {
         ic = COMMAND_FULL;
         goto out;
