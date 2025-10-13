@@ -55,7 +55,7 @@ main(int argc, char *argv[]) {
             case COMMAND_MORE:
             case COMMAND_LESS:
             case COMMAND_PRINT:
-                goto out;
+                break;
             case COMMAND_HELP:
                 main_usage(stdout);
             default:
