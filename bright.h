@@ -83,7 +83,7 @@ static const struct Command commands[] = {
     [COMMAND_HELP]  = {"-h", "--help",  "print this help message"  },
 };
 
-#define ARRAY_LENGTH(x) (int)(sizeof(x) / sizeof(x[0]))
+#define LENGTH(x) (int)(sizeof(x) / sizeof(x[0]))
 
 #define NLEVELS 11
 extern char *program;
