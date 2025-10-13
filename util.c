@@ -27,6 +27,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <time.h>
 
 #ifdef __WIN32__
   #include <windows.h>
@@ -114,7 +115,8 @@ static uint32 util_nthreads(void);
 static void util_die_notify(const char *, ...) __attribute__((noreturn));
 static void util_segv_handler(int32) __attribute__((noreturn));
 static void send_signal(const char *, const int);
-static char *itoa(long, char *);
+static char *itoa2(long, char *);
+static long atoi2(char *);
 static size_t util_page_size = 0;
 
 #ifdef __WIN32__
@@ -341,7 +343,7 @@ util_command(const int argc, char **argv) {
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
     free(cmdline);
-    return;
+    return 0;
 }
 #else
 int
@@ -428,8 +430,10 @@ error(char *format, ...) {
 
     buffer[n] = '\0';
     write(STDERR_FILENO, buffer, (size_t)n);
+#ifndef __WIN32__
     fsync(STDERR_FILENO);
     fsync(STDOUT_FILENO);
+#endif
     return;
 }
 
@@ -592,10 +596,10 @@ send_signal(const char *executable, const int32 signal_number) {
     return;
 }
 #else
+#ifndef __WIN32__
 void
 send_signal(const char *executable, const int32 signal_number) {
     char signal_string[14];
-    int32 n;
     SNPRINTF(signal_string, "%d", signal_number);
 
     switch (fork()) {
@@ -611,10 +615,18 @@ send_signal(const char *executable, const int32 signal_number) {
     }
     return;
 }
+#else
+void
+send_signal(const char *executable, const int32 signal_number) {
+    (void) executable;
+    (void) signal_number;
+    return;
+}
+#endif
 #endif
 
-static char *
-itoa(long num, char *str) {
+char *
+itoa2(long num, char *str) {
     int i = 0;
     bool negative = false;
 
@@ -644,10 +656,16 @@ itoa(long num, char *str) {
     return str;
 }
 
+long
+atoi2(char *str) {
+    return atoi(str);
+}
+
 #ifdef TESTING_util
 #include <assert.h>
 
 int main(void) {
+    char buffer[32];
     void *p1 = xmalloc(SIZEMB(1));
     void *p2 = xcalloc(10, SIZEMB(1));
     char *p3;
@@ -659,6 +677,13 @@ int main(void) {
     p3 = xstrdup(p1);
 
     error("%s == %s is working? %b\n", string, p3, !strcmp(string, p3));
+
+    srand(time(NULL));
+    for (int i = 0; i < 10; i += 1) {
+        int n = rand() - RAND_MAX/2;
+        printf("n=%d\n", n);
+        assert(atoi2(itoa2(n, buffer)) == n);
+    }
 
     free(p1);
     free(p2);
