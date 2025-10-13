@@ -84,13 +84,12 @@ main(int argc, char *argv[]) {
         double m = (double) 1 / (double) (n - 1);
         double quotient = pow((double) last / (double) first, m);
 
-        int i;
-        levels[i = 0] = 0;
-        levels[i = 1] = 1;
-        levels[i = 2] = first;
-        for (i = 3; i < NLEVELS - 1; i += 1)
+        levels[0] = 0;
+        levels[1] = 1;
+        levels[2] = first;
+        for (int i = 3; i < NLEVELS - 1; i += 1)
             levels[i] = (int) ((double) levels[i - 1] * quotient);
-        levels[i = NLEVELS - 1] = last;
+        levels[NLEVELS - 1] = last;
     }
 
     get_bright(&old_bright);
