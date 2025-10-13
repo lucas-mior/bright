@@ -681,7 +681,6 @@ int main(void) {
     srand(time(NULL));
     for (int i = 0; i < 10; i += 1) {
         int n = rand() - RAND_MAX/2;
-        printf("n=%d\n", n);
         assert(atoi2(itoa2(n, buffer)) == n);
     }
 
