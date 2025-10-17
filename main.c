@@ -47,7 +47,8 @@ main(int argc, char *argv[]) {
     }
 
     for (ic = 0; ic < LENGTH(commands); ic += 1) {
-        if (!strcmp(argv[1], commands[ic].shortname) || !strcmp(argv[1], commands[ic].longname)) {
+        if (!strcmp(argv[1], commands[ic].shortname)
+            || !strcmp(argv[1], commands[ic].longname)) {
             spell_error = false;
             switch (ic) {
             case COMMAND_MORE:
@@ -97,7 +98,8 @@ out:
 
     for (int i = 0; i < NLEVELS; i += 1) {
         old_bright.index = i;
-        if ((levels[i] <= old_bright.absolute) && (old_bright.absolute < levels[i + 1])) {
+        if ((levels[i] <= old_bright.absolute)
+            && (old_bright.absolute < levels[i + 1])) {
             break;
         }
     }
@@ -131,7 +133,8 @@ out:
         FILE *save;
 
         if (!(save = fopen(new_bright.file, "w"))) {
-            error("Can't open file for setting current brightness: %s\n", strerror(errno));
+            error("Can't open file for setting current brightness: %s\n",
+                  strerror(errno));
             exit(EXIT_FAILURE);
         }
         if (fprintf(save, "%d\n", levels[new_bright.index]) < 0) {
@@ -151,11 +154,13 @@ out:
             exit(EXIT_FAILURE);
         }
         if ((DWMBLOCKS2_BRIGHT.number = atol(DWMBLOCKS2_BRIGHT.string)) < 10) {
-            error("Invalid BRIGHT environment variable: %s.\n", DWMBLOCKS2_BRIGHT.string);
+            error("Invalid BRIGHT environment variable: %s.\n",
+                  DWMBLOCKS2_BRIGHT.string);
             exit(EXIT_FAILURE);
         }
 
-        send_signal(program_to_signal, (int)(SIGRTMIN + DWMBLOCKS2_BRIGHT.number));
+        send_signal(program_to_signal,
+                    (int)(SIGRTMIN + DWMBLOCKS2_BRIGHT.number));
     }
 
     exit(EXIT_SUCCESS);
@@ -193,8 +198,8 @@ main_usage(FILE *stream) {
     fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
     fprintf(stream, "Available commands:\n");
     for (uint i = 0; i < LENGTH(commands); i += 1) {
-        fprintf(stream, "%s | %-*s : %s\n", commands[i].shortname, 8, commands[i].longname,
-                commands[i].description);
+        fprintf(stream, "%s | %-*s : %s\n", commands[i].shortname, 8,
+                commands[i].longname, commands[i].description);
     }
     exit(stream != stdout);
 }
