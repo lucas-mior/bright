@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=SC2086
+
 testing () {
     for src in *.c; do
         [ "$src" = "$main" ] && continue
@@ -16,7 +18,7 @@ testing () {
 
         set +x 
     done
-    rm *.exe
+    rm -- *.exe
 }
 
 target="${1:-build}"
@@ -38,7 +40,7 @@ if [ $CC = "clang" ]; then
 fi
 
 if [ "$target" = "debug" ]; then
-    CFLAGS="$CFLAGS -g -fsanitize=undefined "
+    CFLAGS="$CFLAGS -g -fsanitize=undefined -DDEBUGGING=1"
 else
     CFLAGS="$CFLAGS -O2 -flto "
 fi
@@ -59,7 +61,7 @@ case "$target" in
         install -Dm644 ${program}.1 ${DESTDIR}${PREFIX}/man/man1/${program}.1
         ;;
     "build"|"debug")
-        ctags --kinds-C=+l *.h *.c 2> /dev/null || true
+        ctags --kinds-C=+l -- *.h *.c 2> /dev/null || true
         vtags.sed tags > .tags.vim 2> /dev/null || true
         set -x
         $CC $CFLAGS -o ${program} $main $LDFLAGS
