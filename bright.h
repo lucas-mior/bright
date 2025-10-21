@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BRIGHT_H
+#if !defined(BRIGHT_H)
 #define BRIGHT_H
 
 #include <stdio.h>
@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <linux/limits.h>
 
-#ifndef INTEGERS
+#if !defined(INTEGERS)
 #define INTEGERS
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -88,7 +88,7 @@ static const struct Command commands[] = {
 #define NLEVELS 11
 extern char *program;
 
-#ifndef SNPRINTF
+#if !defined(SNPRINTF)
 #define SNPRINTF(BUFFER, FORMAT, ...) \
     snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
 #endif
