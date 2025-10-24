@@ -35,8 +35,9 @@ LDFLAGS="$LDFLAGS -lm "
 
 CC=${CC:-cc}
 if [ $CC = "clang" ]; then
-    CFLAGS="$CFLAGS -Weverything "
-    CFLAGS="$CFLAGS -Wno-unsafe-buffer-usage -Wno-format-nonliteral "
+    CFLAGS="$CFLAGS -Weverything"
+    CFLAGS="$CFLAGS -Wno-unsafe-buffer-usage"
+    CFLAGS="$CFLAGS -Wno-format-nonliteral"
 fi
 
 if [ "$target" = "debug" ]; then
