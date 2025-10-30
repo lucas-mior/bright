@@ -86,7 +86,6 @@ static const struct Command commands[] = {
 #define LENGTH(x) (int)(sizeof(x) / sizeof(x[0]))
 
 #define NLEVELS 11
-extern char *program;
 
 #if !defined(SNPRINTF)
 #define SNPRINTF(BUFFER, FORMAT, ...) \

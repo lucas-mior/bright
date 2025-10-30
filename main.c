@@ -23,7 +23,6 @@
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
-char *program;
 static int levels[NLEVELS];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
