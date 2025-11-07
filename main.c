@@ -99,7 +99,7 @@ static const struct Command commands[] = {
 static inline void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
-static int levels[NLEVELS];
+static int levels[NLEVELS + 1];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
 int
@@ -167,11 +167,13 @@ out:
             levels[i] = (int)((double)levels[i - 1]*quotient);
         }
         levels[NLEVELS - 1] = last;
+        levels[NLEVELS] = INT_MAX;
+        error("last:%d\n", last);
     }
 
     get_bright(&old_bright);
 
-    for (int i = 0; i < (NLEVELS - 1); i += 1) {
+    for (int i = 0; i < NLEVELS; i += 1) {
         old_bright.index = i;
         if ((levels[i] <= old_bright.absolute)
             && (old_bright.absolute < levels[i + 1])) {
