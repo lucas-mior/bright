@@ -96,7 +96,7 @@ static const struct Command commands[] = {
 
 #include "util.c"
 
-static inline void get_bright(Brightness *);
+static void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
 static int levels[NLEVELS + 1];
