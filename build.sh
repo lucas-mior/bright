@@ -28,7 +28,7 @@ DESTDIR="${DESTDIR:-/}"
 main="main.c"
 program="bright"
 
-CFLAGS="$CFLAGS -std=c99 -D_DEFAULT_SOURCE "
+CFLAGS="$CFLAGS -std=c11 -D_DEFAULT_SOURCE "
 CFLAGS="$CFLAGS -Wextra -Wall -Wno-disabled-macro-expansion -Wno-unused-macros"
 CFLAGS="$CFLAGS -Wno-unused-function -Wno-constant-logical-operand"
 LDFLAGS="$LDFLAGS -lm "
@@ -39,6 +39,8 @@ if [ $CC = "clang" ]; then
     CFLAGS="$CFLAGS -Weverything"
     CFLAGS="$CFLAGS -Wno-unsafe-buffer-usage"
     CFLAGS="$CFLAGS -Wno-format-nonliteral"
+    CFLAGS="$CFLAGS -Wno-format-pedantic"
+    CFLAGS="$CFLAGS -Wno-pre-c11-compat"
     CFLAGS="$CFLAGS -Wno-implicit-void-ptr-cast"
 fi
 
