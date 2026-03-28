@@ -33,6 +33,10 @@ CFLAGS="$CFLAGS -Wextra -Wall -Wno-disabled-macro-expansion -Wno-unused-macros"
 CFLAGS="$CFLAGS -Wno-unused-function -Wno-constant-logical-operand"
 LDFLAGS="$LDFLAGS -lm "
 
+dir="$(readlink -f "$(dirname "$0")")"
+cbase="cbase"
+CPPFLAGS="$CPPFLAGS -I "$dir/$cbase""
+
 CC=${CC:-cc}
 
 if [ $CC = "clang" ]; then
@@ -71,7 +75,7 @@ case "$target" in
         ctags --kinds-C=+l -- *.h *.c 2> /dev/null || true
         vtags.sed tags > .tags.vim 2> /dev/null || true
         set -x
-        $CC $CFLAGS -o ${program} $main $LDFLAGS
+        $CC $CPPFLAGS $CFLAGS -o ${program} $main $LDFLAGS
         ;;
     *)
         echo "usage: $0 [ uninstall / test / install / build / debug ]"
