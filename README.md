@@ -4,12 +4,12 @@ Change screen brightness, print to stdout and signal another program.
 ## Usage
 ```
 $ bright --help
-usage: bright COMMAND [program_to_signal] 
-Available commands: 
--m | --more   : more brightness 
--l | --less   : less brightness 
--h | --help   : print this help message 
--p | --print  : print current brightness 
+usage: bright COMMAND [program_to_signal]
+Available commands:
+-m | --more   : more brightness
+-l | --less   : less brightness
+-h | --help   : print this help message
+-p | --print  : print current brightness
 ```
 
 ## Configuration

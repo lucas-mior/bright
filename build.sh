@@ -16,7 +16,7 @@ testing () {
             printf "Failed to compile ${RED} $src ${RES}, is main() defined?\n"
         fi
 
-        set +x 
+        set +x
     done
     rm -- *.exe
 }
