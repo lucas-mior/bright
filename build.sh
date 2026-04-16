@@ -57,31 +57,31 @@ else
 fi
 
 case "$target" in
-    "uninstall")
-        set -x
-        rm -f ${DESTDIR}${PREFIX}/bin/${program}
-        rm -f ${DESTDIR}${PREFIX}/man/man1/${program}.1
-        ;;
-    "check")
-        CC=gcc CFLAGS="-fanalyzer" ./build.sh
-        scan-build --view -analyze-headers --status-bugs ./build.sh
-        ;;
-    "test")
-        testing
-        ;;
-    "install")
-        [ ! -f $program ] && $0 build
-        set -x
-        install -Dm755 ${program} ${DESTDIR}${PREFIX}/bin/${program}
-        install -Dm644 ${program}.1 ${DESTDIR}${PREFIX}/man/man1/${program}.1
-        ;;
-    "build"|"debug")
-        ctags --kinds-C=+l -- *.h *.c 2> /dev/null || true
-        vtags.sed tags > .tags.vim 2> /dev/null || true
-        set -x
-        $CC $CPPFLAGS $CFLAGS -o ${program} $main $LDFLAGS
-        ;;
-    *)
-        echo "usage: $0 [ check / uninstall / test / install / build / debug ]"
-        ;;
+"uninstall")
+    set -x
+    rm -f ${DESTDIR}${PREFIX}/bin/${program}
+    rm -f ${DESTDIR}${PREFIX}/man/man1/${program}.1
+    ;;
+"check")
+    CC=gcc CFLAGS="-fanalyzer" ./build.sh
+    scan-build --view -analyze-headers --status-bugs ./build.sh
+    ;;
+"test")
+    testing
+    ;;
+"install")
+    [ ! -f $program ] && $0 build
+    set -x
+    install -Dm755 ${program} ${DESTDIR}${PREFIX}/bin/${program}
+    install -Dm644 ${program}.1 ${DESTDIR}${PREFIX}/man/man1/${program}.1
+    ;;
+"build"|"debug")
+    ctags --kinds-C=+l -- *.h *.c 2> /dev/null || true
+    vtags.sed tags > .tags.vim 2> /dev/null || true
+    set -x
+    $CC $CPPFLAGS $CFLAGS -o ${program} $main $LDFLAGS
+    ;;
+*)
+    echo "usage: $0 [ check / uninstall / test / install / build / debug ]"
+    ;;
 esac
