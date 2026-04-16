@@ -62,6 +62,10 @@ case "$target" in
         rm -f ${DESTDIR}${PREFIX}/bin/${program}
         rm -f ${DESTDIR}${PREFIX}/man/man1/${program}.1
         ;;
+    "check")
+        CC=gcc CFLAGS="-fanalyzer" ./build.sh
+        scan-build --view -analyze-headers --status-bugs ./build.sh
+        ;;
     "test")
         testing
         ;;
@@ -78,6 +82,6 @@ case "$target" in
         $CC $CPPFLAGS $CFLAGS -o ${program} $main $LDFLAGS
         ;;
     *)
-        echo "usage: $0 [ uninstall / test / install / build / debug ]"
+        echo "usage: $0 [ check / uninstall / test / install / build / debug ]"
         ;;
 esac

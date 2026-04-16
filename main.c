@@ -79,7 +79,6 @@ static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
 int
 main(int argc, char *argv[]) {
-    bool spell_error = true;
     char *program_to_signal;
     Brightness max_bright;
     Brightness old_bright;
@@ -99,7 +98,6 @@ main(int argc, char *argv[]) {
     for (ic = 0; ic < LENGTH(commands); ic += 1) {
         if (!strcmp(argv[1], commands[ic].shortname)
             || !strcmp(argv[1], commands[ic].longname)) {
-            spell_error = false;
             switch (ic) {
             case COMMAND_MORE:
             case COMMAND_LESS:
@@ -111,9 +109,6 @@ main(int argc, char *argv[]) {
                 main_usage(stderr);
             }
         }
-    }
-    if (spell_error) {
-        main_usage(stderr);
     }
 
 out:
