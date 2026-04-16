@@ -48,6 +48,8 @@ if [ $CC = "clang" ]; then
     CFLAGS="$CFLAGS -Wno-c++-keyword"
     CFLAGS="$CFLAGS -Wno-covered-switch-default"
     CFLAGS="$CFLAGS -Wno-implicit-void-ptr-cast"
+    CFLAGS="$CFLAGS -Wno-cast-qual"
+    CFLAGS="$CFLAGS -Wno-float-equal"
 fi
 
 if [ "$target" = "debug" ]; then
