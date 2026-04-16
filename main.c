@@ -29,25 +29,7 @@
 #include <sys/types.h>
 #include <linux/limits.h>
 
-#if !defined(INTEGERS)
-#define INTEGERS
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef unsigned long long ulonglong;
-
-typedef long long llong;
-
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef int64_t int64;
-typedef uint8_t uint8;
-typedef uint16_t uint16;
-typedef uint32_t uint32;
-typedef uint64_t uint64;
-#endif
+#include "util.c"
 
 typedef struct Number {
     char *string;
@@ -82,16 +64,12 @@ static const struct Command commands[] = {
     [COMMAND_HELP] = {"-h", "--help", "print this help message"},
 };
 
-#define LENGTH(x) (int)(sizeof(x) / sizeof(x[0]))
-
 #define NLEVELS 11
 
 #if !defined(SNPRINTF)
 #define SNPRINTF(BUFFER, FORMAT, ...) \
     snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
 #endif
-
-#include "util.c"
 
 static void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
