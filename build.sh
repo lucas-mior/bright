@@ -31,6 +31,7 @@ program="bright"
 CFLAGS="$CFLAGS -std=c11 -D_DEFAULT_SOURCE "
 CFLAGS="$CFLAGS -Wextra -Wall -Wno-disabled-macro-expansion -Wno-unused-macros"
 CFLAGS="$CFLAGS -Wno-unused-function -Wno-constant-logical-operand"
+CFLAGS="$CFLAGS -Wno-gnu-union-cast"
 LDFLAGS="$LDFLAGS -lm "
 
 dir="$(readlink -f "$(dirname "$0")")"
