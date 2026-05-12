@@ -31,11 +31,6 @@
 
 #include "util.c"
 
-typedef struct Number {
-    char *string;
-    int64 number;
-} Number;
-
 typedef struct Brightness {
     char file[PATH_MAX];
     int absolute;
@@ -194,20 +189,20 @@ out:
     }
 
     if (program_to_signal) {
-        Number DWMBLOCKS2_BRIGHT;
+        char *DWMBLOCKS2_BRIGHT;
+        int32 number;
 
-        if (!(DWMBLOCKS2_BRIGHT.string = getenv("DWMBLOCKS2_BRIGHT"))) {
-            error("%s environment variable not set.\n", "DWMBLOCKS2_BRIGHT");
+        GETENV(DWMBLOCKS2_BRIGHT);
+        if (DWMBLOCKS2_BRIGHT == NULL) {
             exit(EXIT_FAILURE);
         }
-        if ((DWMBLOCKS2_BRIGHT.number = atol(DWMBLOCKS2_BRIGHT.string)) < 10) {
-            error("Invalid BRIGHT environment variable: %s.\n",
-                  DWMBLOCKS2_BRIGHT.string);
+        if ((number = atoi(DWMBLOCKS2_BRIGHT)) < 10) {
+            error("Invalid environment variable: %s = %s.\n",
+                  QUOTE(DWMBLOCKS2_BRIGHT), DWMBLOCKS2_BRIGHT);
             exit(EXIT_FAILURE);
         }
 
-        send_signal(program_to_signal,
-                    (int)(SIGRTMIN + DWMBLOCKS2_BRIGHT.number));
+        send_signal(program_to_signal, SIGRTMIN + number);
     }
 
     exit(EXIT_SUCCESS);
