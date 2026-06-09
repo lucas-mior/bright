@@ -45,13 +45,13 @@ enum {
     COMMAND_PRINT,
 };
 
-struct Command {
+struct BrightCommand {
     const char *shortname;
     const char *longname;
     const char *description;
 };
 
-static const struct Command commands[] = {
+static const struct BrightCommand commands[] = {
     [COMMAND_MORE] =  {"-m", "--more",  "more brightness"},
     [COMMAND_LESS] =  {"-l", "--less",  "less brightness"},
     [COMMAND_FULL] =  {"-f", "--full",  "full brightness"},
