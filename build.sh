@@ -28,7 +28,7 @@ DESTDIR="${DESTDIR:-/}"
 main="main.c"
 program="bright"
 
-CFLAGS="$CFLAGS -std=c11 -D_DEFAULT_SOURCE "
+CFLAGS="$CFLAGS -std=c11 -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
 CFLAGS="$CFLAGS -Wextra -Wall -Wno-disabled-macro-expansion -Wno-unused-macros"
 CFLAGS="$CFLAGS -Wno-unused-function -Wno-constant-logical-operand"
 CFLAGS="$CFLAGS -Wno-gnu-union-cast"
