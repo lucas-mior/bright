@@ -29,7 +29,8 @@
 #include <sys/types.h>
 #include <linux/limits.h>
 
-#include "util.c"
+#define CBASE_IMPLEMENT
+#include "cbase.h"
 
 typedef struct Brightness {
     char file[PATH_MAX];
