@@ -20,8 +20,8 @@
 
 typedef struct Brightness {
     char file[PATH_MAX];
-    int absolute;
-    int index;
+    int32 absolute;
+    int32 index;
 } Brightness;
 
 enum {
@@ -56,16 +56,16 @@ static const struct BrightCommand commands[] = {
 static void get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
-static int levels[NLEVELS + 1];
+static int32 levels[NLEVELS + 1];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";
 
-int
-main(int argc, char *argv[]) {
+int32
+main(int32 argc, char *argv[]) {
     char *program_to_signal;
     Brightness max_bright;
     Brightness old_bright;
     Brightness new_bright;
-    int ic;
+    int32 ic;
 
     program = argv[0];
 
@@ -110,9 +110,9 @@ out:
 
     get_bright(&max_bright);
     {
-        int last;
-        int first;
-        int n;
+        int32 last;
+        int32 first;
+        int32 n;
         double m;
         double quotient;
 
@@ -131,8 +131,8 @@ out:
         levels[0] = 0;
         levels[1] = 1;
         levels[2] = first;
-        for (int i = 3; i < NLEVELS - 1; i += 1) {
-            levels[i] = (int)((double)levels[i - 1]*quotient);
+        for (int32 i = 3; i < NLEVELS - 1; i += 1) {
+            levels[i] = (int32)((double)levels[i - 1]*quotient);
         }
         levels[NLEVELS - 1] = last;
         levels[NLEVELS] = INT_MAX;
@@ -143,7 +143,7 @@ out:
 
     get_bright(&old_bright);
 
-    for (int i = 0; i < NLEVELS; i += 1) {
+    for (int32 i = 0; i < NLEVELS; i += 1) {
         old_bright.index = i;
         if ((levels[i] <= old_bright.absolute)
             && (old_bright.absolute < levels[i + 1])) {
@@ -216,7 +216,7 @@ out:
 void
 get_bright(Brightness *bright) {
     char buffer[16];
-    int file;
+    int32 file;
     ssize_t r;
 
     if ((file = open(bright->file, O_RDONLY)) < 0) {
