@@ -113,26 +113,26 @@ out:
     }
     {
         int32 last;
-        int32 first;
+        int32 second;
         int32 n;
         double m;
         double quotient;
 
         last = max_bright.absolute;
-        first = last / 60;
-        if (first <= 0) {
-            first = 1;
+        second = last / 60;
+        if (second <= 0) {
+            second = 2;
         }
 
         // TODO: If max_brightness is 60..119, integer truncation keeps
         // many adjacent levels equal, so --less/--more can stop changing it.
         n = NLEVELS - 2;
         m = (double)1 / (double)(n - 1);
-        quotient = pow((double)last / (double)first, m);
+        quotient = pow((double)last / (double)second, m);
 
         levels[0] = 0;
         levels[1] = 1;
-        levels[2] = first;
+        levels[2] = second;
         for (int32 i = 3; i < NLEVELS - 1; i += 1) {
             levels[i] = (int32)((double)levels[i - 1]*quotient);
         }
