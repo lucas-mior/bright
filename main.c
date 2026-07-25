@@ -233,7 +233,7 @@ get_bright(Brightness *bright) {
             error(": %s", strerror(errno));
         }
         error(".\n");
-        close(file);
+        XCLOSE(&file, bright->file);
         // TODO: Callers use bright->absolute after this returns, so this
         // failure path leaves them reading an uninitialized value.
         return;
