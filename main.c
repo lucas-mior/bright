@@ -220,9 +220,8 @@ get_bright(Brightness *bright) {
     ssize_t r;
 
     if ((file = open(bright->file, O_RDONLY)) < 0) {
-        // TODO: This is misleading for max_brightness reads; include
-        // bright->file instead of saying "old bright".
-        error("Can't open file for getting old bright: %s\n", strerror(errno));
+        error("Can't open file %s for getting brightness: %s\n",
+              bright->file, strerror(errno));
         // TODO: Callers use bright->absolute after this returns, so this
         // failure path leaves them reading an uninitialized value.
         return;
