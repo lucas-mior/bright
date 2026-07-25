@@ -53,7 +53,7 @@ static const struct BrightCommand commands[] = {
     snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
 #endif
 
-static void get_bright(Brightness *);
+static bool get_bright(Brightness *);
 static void main_usage(FILE *) __attribute__((noreturn));
 
 static int32 levels[NLEVELS + 1];
@@ -108,7 +108,9 @@ out:
     SNPRINTF(old_bright.file, "%s/brightness", bright_directory);
     SNPRINTF(new_bright.file, "%s/brightness", bright_directory);
 
-    get_bright(&max_bright);
+    if (!get_bright(&max_bright)) {
+        max_bright.absolute = 100000;
+    }
     {
         int32 last;
         int32 first;
@@ -141,7 +143,9 @@ out:
         }
     }
 
-    get_bright(&old_bright);
+    if (!get_bright(&old_bright)) {
+        old_bright.absolute = 100000;
+    }
 
     for (int32 i = 0; i < NLEVELS; i += 1) {
         old_bright.index = i;
@@ -213,7 +217,7 @@ out:
     exit(EXIT_SUCCESS);
 }
 
-void
+bool
 get_bright(Brightness *bright) {
     char buffer[16];
     int32 file;
@@ -224,7 +228,7 @@ get_bright(Brightness *bright) {
               bright->file, strerror(errno));
         // TODO: Callers use bright->absolute after this returns, so this
         // failure path leaves them reading an uninitialized value.
-        return;
+        return false;
     }
 
     if ((r = read64(file, buffer, sizeof(buffer))) <= 0) {
@@ -236,15 +240,15 @@ get_bright(Brightness *bright) {
         XCLOSE(&file, bright->file);
         // TODO: Callers use bright->absolute after this returns, so this
         // failure path leaves them reading an uninitialized value.
-        return;
+        return false;
     }
     // TODO: read64() can fill all 16 bytes, so buffer[r] writes past the
     // end when r == sizeof(buffer).
     buffer[r] = '\0';
 
     bright->absolute = atoi(buffer);
-    close(file);
-    return;
+    XCLOSE(&file, bright->file);
+    return true;
 }
 
 void
