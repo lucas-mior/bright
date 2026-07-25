@@ -220,7 +220,7 @@ get_bright(Brightness *bright) {
     ssize_t r;
 
     if ((file = open(bright->file, O_RDONLY)) < 0) {
-        error("Can't open file %s for getting brightness: %s\n",
+        error("Error opening file %s for getting brightness: %s\n",
               bright->file, strerror(errno));
         // TODO: Callers use bright->absolute after this returns, so this
         // failure path leaves them reading an uninitialized value.
