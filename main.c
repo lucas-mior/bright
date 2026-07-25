@@ -84,19 +84,20 @@ main(int32 argc, char *argv[]) {
             case COMMAND_MORE:
             case COMMAND_LESS:
             case COMMAND_PRINT:
+            case COMMAND_FULL:
                 goto out;
             case COMMAND_HELP:
                 main_usage(stdout);
-            // TODO: COMMAND_FULL is listed as a valid command, but this
-            // parser treats `bright --full` as invalid.
             default:
                 main_usage(stderr);
             }
         }
     }
 
-    // TODO: Unknown commands fall through with ic == LENGTH(commands), so
-    // the program reads brightness before reporting "Unexpected value".
+    if (ic >= LENGTH(commands)) {
+        main_usage(stderr);
+    }
+
 out:
     if (argc >= 3) {
         program_to_signal = argv[2];
