@@ -112,7 +112,11 @@ out:
     if (!get_bright(&max_bright)) {
         max_bright.absolute = 100000;
     }
-    {
+    if (max_bright.absolute <= 60) {
+        for (int32 i = 0; i < NLEVELS; i += 1) {
+            levels[i] = i;
+        }
+    } else {
         int32 last;
         int32 second;
         int32 n;
@@ -125,8 +129,6 @@ out:
             second = 2;
         }
 
-        // TODO: If max_brightness is 60..119, integer truncation keeps
-        // many adjacent levels equal, so --less/--more can stop changing it.
         n = NLEVELS - 2;
         m = (double)1 / (double)(n - 1);
         quotient = pow((double)last / (double)second, m);
