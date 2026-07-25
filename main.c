@@ -238,8 +238,6 @@ get_bright(Brightness *bright) {
         XCLOSE(&file, bright->file);
         return false;
     }
-    // TODO: read64() can fill all 16 bytes, so buffer[r] writes past the
-    // end when r == sizeof(buffer).
     if (r >= SIZEOF(buffer)) {
         r = SIZEOF(buffer) - 1;
     }
