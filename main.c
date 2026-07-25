@@ -87,12 +87,16 @@ main(int argc, char *argv[]) {
                 goto out;
             case COMMAND_HELP:
                 main_usage(stdout);
+            // TODO: COMMAND_FULL is listed as a valid command, but this
+            // parser treats `bright --full` as invalid.
             default:
                 main_usage(stderr);
             }
         }
     }
 
+    // TODO: Unknown commands fall through with ic == LENGTH(commands), so
+    // the program reads brightness before reporting "Unexpected value".
 out:
     if (argc >= 3) {
         program_to_signal = argv[2];
@@ -106,11 +110,23 @@ out:
 
     get_bright(&max_bright);
     {
-        int last = max_bright.absolute;
-        int first = last / 60;
-        int n = NLEVELS - 2;
-        double m = (double)1 / (double)(n - 1);
-        double quotient = pow((double)last / (double)first, m);
+        int last;
+        int first;
+        int n;
+        double m;
+        double quotient;
+
+        last = max_bright.absolute;
+        first = last / 60;
+        if (first <= 0) {
+            first = 1;
+        }
+
+        // TODO: If max_brightness is 60..119, integer truncation keeps
+        // many adjacent levels equal, so --less/--more can stop changing it.
+        n = NLEVELS - 2;
+        m = (double)1 / (double)(n - 1);
+        quotient = pow((double)last / (double)first, m);
 
         levels[0] = 0;
         levels[1] = 1;
@@ -120,7 +136,9 @@ out:
         }
         levels[NLEVELS - 1] = last;
         levels[NLEVELS] = INT_MAX;
-        error("last:%d\n", last);
+        if (DEBUGGING) {
+            error("last:%d\n", last);
+        }
     }
 
     get_bright(&old_bright);
@@ -172,6 +190,8 @@ out:
             fclose(save);
             exit(EXIT_FAILURE);
         }
+        // TODO: fclose(save) can report the buffered write failure, but
+        // this return value is ignored.
         fclose(save);
     }
 
@@ -179,6 +199,8 @@ out:
         char *DWMBLOCKS2_BRIGHT;
         int32 number;
 
+        // TODO: README.md and bright.1 document $BRIGHT, but the program
+        // actually reads $DWMBLOCKS2_BRIGHT here.
         GETENV(DWMBLOCKS2_BRIGHT);
         if (DWMBLOCKS2_BRIGHT == NULL) {
             exit(EXIT_FAILURE);
@@ -202,7 +224,11 @@ get_bright(Brightness *bright) {
     ssize_t r;
 
     if ((file = open(bright->file, O_RDONLY)) < 0) {
+        // TODO: This is misleading for max_brightness reads; include
+        // bright->file instead of saying "old bright".
         error("Can't open file for getting old bright: %s\n", strerror(errno));
+        // TODO: Callers use bright->absolute after this returns, so this
+        // failure path leaves them reading an uninitialized value.
         return;
     }
 
@@ -213,8 +239,12 @@ get_bright(Brightness *bright) {
         }
         error(".\n");
         close(file);
+        // TODO: Callers use bright->absolute after this returns, so this
+        // failure path leaves them reading an uninitialized value.
         return;
     }
+    // TODO: read64() can fill all 16 bytes, so buffer[r] writes past the
+    // end when r == sizeof(buffer).
     buffer[r] = '\0';
 
     bright->absolute = atoi(buffer);
