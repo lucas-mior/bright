@@ -185,14 +185,12 @@ out:
             exit(EXIT_FAILURE);
         }
         if (fprintf(save, "%d\n", levels[new_bright.index]) < 0) {
-            error("Can't write to file.\n");
+            error("Error writing to file: %s.\n", strerror(errno));
             new_bright.index = old_bright.index;
-            fclose(save);
+            XFCLOSE(save, new_bright.file);
             exit(EXIT_FAILURE);
         }
-        // TODO: fclose(save) can report the buffered write failure, but
-        // this return value is ignored.
-        fclose(save);
+        XFCLOSE(save, new_bright.file);
     }
 
     if (program_to_signal) {
