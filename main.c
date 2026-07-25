@@ -197,8 +197,6 @@ out:
         char *DWMBLOCKS2_BRIGHT;
         int32 number;
 
-        // TODO: README.md and bright.1 document $BRIGHT, but the program
-        // actually reads $DWMBLOCKS2_BRIGHT here.
         GETENV(DWMBLOCKS2_BRIGHT);
         if (DWMBLOCKS2_BRIGHT == NULL) {
             exit(EXIT_FAILURE);
