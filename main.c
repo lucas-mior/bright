@@ -219,15 +219,13 @@ out:
 
 bool
 get_bright(Brightness *bright) {
-    char buffer[16];
+    char buffer[32];
     int32 file;
     ssize_t r;
 
     if ((file = open(bright->file, O_RDONLY)) < 0) {
         error("Error opening file %s for getting brightness: %s\n",
               bright->file, strerror(errno));
-        // TODO: Callers use bright->absolute after this returns, so this
-        // failure path leaves them reading an uninitialized value.
         return false;
     }
 
@@ -238,12 +236,13 @@ get_bright(Brightness *bright) {
         }
         error(".\n");
         XCLOSE(&file, bright->file);
-        // TODO: Callers use bright->absolute after this returns, so this
-        // failure path leaves them reading an uninitialized value.
         return false;
     }
     // TODO: read64() can fill all 16 bytes, so buffer[r] writes past the
     // end when r == sizeof(buffer).
+    if (r >= sizeof(buffer)) {
+        r = sizeof(buffer) - 1;
+    }
     buffer[r] = '\0';
 
     bright->absolute = atoi(buffer);
