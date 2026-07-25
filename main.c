@@ -176,8 +176,7 @@ out:
         new_bright.index = NLEVELS - 1;
         break;
     default:
-        fprintf(stderr, "Unexpected value: %d\n", ic);
-        exit(EXIT_FAILURE);
+        main_usage(stderr);
     }
 
     {
