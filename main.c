@@ -201,7 +201,6 @@ out:
 
     if (program_to_signal) {
         char *DWMBLOCKS2_BRIGHT;
-        int32 DWMBLOCKS2_BRIGHT_len;
         int32 number;
 
         GETENV(DWMBLOCKS2_BRIGHT);
@@ -213,7 +212,6 @@ out:
                   QUOTE(DWMBLOCKS2_BRIGHT), DWMBLOCKS2_BRIGHT);
             exit(EXIT_FAILURE);
         }
-        free2(DWMBLOCKS2_BRIGHT, DWMBLOCKS2_BRIGHT_len + 1);
 
         send_signal(program_to_signal, SIGRTMIN + number);
     }
