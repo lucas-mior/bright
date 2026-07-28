@@ -1,20 +1,6 @@
 // SPDX-License-Identifier: AGPL
 // Copyright (c) 2026 Mior, Lucas
 
-#include <errno.h>
-#include <math.h>
-
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <limits.h>
-#include <sys/types.h>
-#include <linux/limits.h>
-
 #define CBASE_IMPLEMENT
 #include "cbase.h"
 
