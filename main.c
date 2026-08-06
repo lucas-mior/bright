@@ -64,8 +64,8 @@ main(int32 argc, char *argv[]) {
     }
 
     for (ic = 0; ic < LENGTH(commands); ic += 1) {
-        if (!strcmp(argv[1], commands[ic].shortname)
-            || !strcmp(argv[1], commands[ic].longname)) {
+        if (strequal(argv[1], commands[ic].shortname)
+            || strequal(argv[1], commands[ic].longname)) {
             switch (ic) {
             case COMMAND_MORE:
             case COMMAND_LESS:
