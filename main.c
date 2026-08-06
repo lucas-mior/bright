@@ -19,9 +19,9 @@ enum {
 };
 
 struct BrightCommand {
-    const char *shortname;
-    const char *longname;
-    const char *description;
+    char *shortname;
+    char *longname;
+    char *description;
 };
 
 static const struct BrightCommand commands[] = {
