@@ -17,6 +17,11 @@ fi
 alias trace_on='set -x'
 alias trace_off='{ set +x; } 2>/dev/null'
 
+cbase_pre_compile () {
+    cbase_pre_compile_dir="${cbase:-cbase}"
+    "$cbase_pre_compile_dir/pre-compile.sh" "$CC" $CPPFLAGS $CFLAGS
+}
+
 dir=$(dirname "$(readlink -f "$0")")
 CPPFLAGS="$CPPFLAGS -I$dir/cbase"
 cd "$dir" || exit
@@ -84,7 +89,7 @@ fi
 case "$target" in
 "debug")
     CFLAGS="$CFLAGS -g3 -O0 -fsanitize=undefined"
-    CPPFLAGS="$CPPFLAGS $GNUSOURCE -DDEBUGGING=1"
+    CPPFLAGS="$CPPFLAGS $GNUSOURCE -DDEBUGGING=1 -DCBASE_IMPLEMENT=0"
     exe="bin/${program}_debug"
     ;;
 "test")
@@ -144,8 +149,21 @@ testing () {
         flags=$(awk '/flags:/ { $1=$2=""; print $0 }' "$src")
         test_exe="/tmp/${name}_test"
 
+        cbase_obj=
+        cbase_test_cppflags=
+        case "$src" in
+        ./cbase/*|cbase/*)
+            ;;
+        *)
+            cbase_obj=$(cbase_pre_compile)
+            cbase_test_cppflags="-DCBASE_IMPLEMENT=0"
+            ;;
+        esac
+
         trace_on
-        if $CC $CPPFLAGS $CFLAGS -DTESTING_$name=1 "$src" -o "$test_exe" $LDFLAGS $flags; then
+        if $CC $CPPFLAGS $cbase_test_cppflags $CFLAGS \
+              -DTESTING_$name=1 "$src" $cbase_obj \
+              -o "$test_exe" $LDFLAGS $flags; then
             "$test_exe"
         else
             error "Failed to compile %s, is main() defined?\n" "$src"
@@ -191,8 +209,14 @@ case "$target" in
     ;;
 *)
     build_tags
+
+    cbase_obj=
+    if [ "$target" = "debug" ]; then
+        cbase_obj=$(cbase_pre_compile)
+    fi
+
     trace_on
-    $CC $CPPFLAGS $CFLAGS -o "$exe" "$main" $LDFLAGS
+    $CC $CPPFLAGS $CFLAGS -o "$exe" "$main" $cbase_obj $LDFLAGS
     trace_off
     ;;
 esac
