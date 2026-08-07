@@ -1,7 +1,7 @@
-compile_commands.json
-/.cache/
-*temp_delete_me*
-*.cmd
-*.o
 bin/
+/.cache/
+*.cmd
+compile_commands.json
+*.o
 *.tar.gz
+*temp_delete_me*
