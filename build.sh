@@ -123,7 +123,7 @@ testing () {
 
         trace_on
         if $CC $CPPFLAGS $CFLAGS \
-              -DCBASE_IMPLEMENT=1 -DTESTING_$name=1 "$src" \
+            -DCBASE_IMPLEMENT -DTESTING_$name=1 "$src" \
               -o "$test_exe" $LDFLAGS $flags; then
             "$test_exe"
         else
