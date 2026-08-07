@@ -108,11 +108,12 @@ esac
 
 build_tags () {
     if command -v ctags >/dev/null 2>&1; then
-        find . -iname "*.[ch]" -print0             | xargs -0 ctags --kinds-C=+l+d 2> /dev/null || true
+        find . -iname "*.[ch]" -print0 \
+            | xargs --verbose -0 ctags --kinds-C=+l+d || true
     fi
 
     if [ -f tags ] && command -v vtags.sed >/dev/null 2>&1; then
-        vtags.sed tags | sort | uniq > .tags.vim 2> /dev/null || true
+        vtags.sed tags | sort | uniq > .tags.vim      || true
     fi
 }
 
