@@ -35,7 +35,7 @@ main="main.c"
 exe="bin/$program"
 mkdir -p "$(dirname "$exe")"
 
-CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE"
+CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
 CFLAGS="$CFLAGS -std=c11"
 CFLAGS="$CFLAGS -Wfatal-errors"
 CFLAGS="$CFLAGS -Wextra -Wall"
@@ -49,7 +49,6 @@ CFLAGS="$CFLAGS -Wno-float-equal"
 CFLAGS="$CFLAGS -Wno-undefined-internal"
 CFLAGS="$CFLAGS -Wno-cast-qual"
 CFLAGS="$CFLAGS -Wno-unknown-pragmas"
-CPPFLAGS="$CPPFLAGS -D_XOPEN_SOURCE=700"
 LDFLAGS="$LDFLAGS -lm"
 
 OS=$(uname -a)
