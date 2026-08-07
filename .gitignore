@@ -3,3 +3,4 @@ compile_commands.json
 temp_delete_me
 *.cmd
 *.o
+bin/
