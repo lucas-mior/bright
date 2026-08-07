@@ -6,7 +6,6 @@ dir=$(dirname "$(readlink -f "$0")")
 # shellcheck source=/dev/null
 . "$dir/cbase/common.sh"
 
-CPPFLAGS="$CPPFLAGS -I$dir/cbase"
 cd "$dir" || exit
 program=$(get_program "$0")
 script=$(basename "$0")
@@ -23,7 +22,9 @@ main="main.c"
 exe="bin/$program"
 mkdir -p "$(dirname "$exe")"
 
+CPPFLAGS="$CPPFLAGS -I$dir/cbase"
 CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
+
 CFLAGS="$CFLAGS -std=c11"
 CFLAGS="$CFLAGS -Wfatal-errors"
 CFLAGS="$CFLAGS -Wextra -Wall"
@@ -37,6 +38,7 @@ CFLAGS="$CFLAGS -Wno-undefined-internal"
 CFLAGS="$CFLAGS -Wno-unknown-pragmas"
 CFLAGS="$CFLAGS -Wno-unknown-warning-option"
 CFLAGS="$CFLAGS -Wno-unused-macros"
+
 LDFLAGS="$LDFLAGS -lm"
 
 OS=$(uname -a)
