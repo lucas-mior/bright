@@ -25,8 +25,9 @@ CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
 
 CFLAGS="$CFLAGS -std=c11"
 CFLAGS="$CFLAGS -Wfatal-errors"
-CFLAGS="$CFLAGS -Wextra -Wall"
-CFLAGS="$CFLAGS -Werror"
+CFLAGS="$CFLAGS -Wall -Wextra"
+CFLAGS="$CFLAGS -Werror=all -Werror=extra"
+# CFLAGS="$CFLAGS -Werror"  # Only activate it occasionally
 CFLAGS="$CFLAGS -Wno-cast-qual"
 CFLAGS="$CFLAGS -Wno-constant-logical-operand"
 CFLAGS="$CFLAGS -Wno-float-equal"
