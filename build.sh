@@ -16,7 +16,6 @@ printf "\n${script} ${RED}${1:-} ${2:-}$RES\n"
 PREFIX="${PREFIX:-/usr/local}"
 DESTDIR="${DESTDIR:-/}"
 
-main="main.c"
 exe="bin/$program"
 mkdir -p "$(dirname "$exe")"
 
@@ -85,7 +84,7 @@ case "$target" in
 fast_feedback)
     build_tags
     trace_on
-    $CC $CPPFLAGS $CFLAGS -o "$exe" "$main" $LDFLAGS && LC_ALL=C "$exe"
+    $CC $CPPFLAGS $CFLAGS -o "$exe" "main.c" $LDFLAGS && LC_ALL=C "$exe"
     trace_off
     ;;
 uninstall)
@@ -107,7 +106,7 @@ check)
 test)
     find . -maxdepth 1 -name "*.c" | sort | while read -r src; do
         name=$(basename "$src")
-        [ "$name" = "$main" ] && continue
+        [ "$name" = "main.c" ] && continue
         printf "Testing %s...\n" "$src"
 
         name=$(echo "$name" | sed 's/\.c//g')
@@ -138,7 +137,7 @@ install)
     build_tags
 
     trace_on
-    $CC $CPPFLAGS $CFLAGS -o "$exe" "$main" $LDFLAGS
+    $CC $CPPFLAGS $CFLAGS -o "$exe" "main.c" $LDFLAGS
     trace_off
     ;;
 esac
