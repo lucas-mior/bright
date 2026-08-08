@@ -20,34 +20,6 @@ main="main.c"
 exe="bin/$program"
 mkdir -p "$(dirname "$exe")"
 
-CPPFLAGS="$CPPFLAGS -I$dir/cbase"
-CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
-
-CFLAGS="$CFLAGS -std=c11"
-CFLAGS="$CFLAGS -Wfatal-errors"
-CFLAGS="$CFLAGS -Wall -Wextra"
-CFLAGS="$CFLAGS -Werror=all -Werror=extra"
-# CFLAGS="$CFLAGS -Werror"  # Only uncomment occasionally, keep this line
-CFLAGS="$CFLAGS -Wno-cast-qual"
-CFLAGS="$CFLAGS -Wno-constant-logical-operand"
-CFLAGS="$CFLAGS -Wno-float-equal"
-CFLAGS="$CFLAGS -Wno-format-pedantic"
-CFLAGS="$CFLAGS -Wno-gnu-union-cast"
-CFLAGS="$CFLAGS -Wno-undefined-internal"
-CFLAGS="$CFLAGS -Wno-unknown-pragmas"
-CFLAGS="$CFLAGS -Wno-unknown-warning-option"
-CFLAGS="$CFLAGS -Wno-unused-macros"
-
-LDFLAGS="$LDFLAGS -lm"
-
-OS=$(uname -a)
-GNUSOURCE=
-if echo "$OS" | grep -q "Linux"; then
-    if echo "$OS" | grep -q "GNU"; then
-        GNUSOURCE="-D_GNU_SOURCE"
-    fi
-fi
-
 case "$target" in
 debug|test)
     CC="${CC:-tcc}"
@@ -63,6 +35,24 @@ esac
 if ! command -v "$CC" > /dev/null 2>&1; then
     CC=cc
 fi
+
+CPPFLAGS="$CPPFLAGS -I$dir/cbase"
+CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
+
+CFLAGS="$CFLAGS -std=c11"
+CFLAGS="$CFLAGS -Wfatal-errors"
+CFLAGS="$CFLAGS -Wextra -Wall"
+CFLAGS="$CFLAGS -Werror=all -Werror=extra"
+# CFLAGS="$CFLAGS -Werror"  # Only uncomment occasionally, keep this line
+CFLAGS="$CFLAGS -Wno-cast-qual"
+CFLAGS="$CFLAGS -Wno-constant-logical-operand"
+CFLAGS="$CFLAGS -Wno-float-equal"
+CFLAGS="$CFLAGS -Wno-format-pedantic"
+CFLAGS="$CFLAGS -Wno-gnu-union-cast"
+CFLAGS="$CFLAGS -Wno-undefined-internal"
+CFLAGS="$CFLAGS -Wno-unknown-pragmas"
+CFLAGS="$CFLAGS -Wno-unknown-warning-option"
+CFLAGS="$CFLAGS -Wno-unused-macros"
 
 if [ "$CC" = "clang" ]; then
     CFLAGS="$CFLAGS -Weverything"
@@ -80,6 +70,17 @@ if [ "$CC" = "clang" ]; then
     CFLAGS="$CFLAGS -Wno-unsafe-buffer-usage"
     CFLAGS="$CFLAGS -Wno-used-but-marked-unused"
 fi
+
+LDFLAGS="$LDFLAGS -lm"
+
+OS=$(uname -a)
+GNUSOURCE=
+if echo "$OS" | grep -q "Linux"; then
+    if echo "$OS" | grep -q "GNU"; then
+        GNUSOURCE="-D_GNU_SOURCE"
+    fi
+fi
+
 case "$target" in
 debug)
     CFLAGS="$CFLAGS -g3 -O0 -fsanitize=undefined"
