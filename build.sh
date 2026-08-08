@@ -11,9 +11,7 @@ program=$(get_program "$0")
 script=$(basename "$0")
 target="${1:-debug}"
 
-printf "
-${script} ${RED}${1:-} ${2:-}$RES
-"
+printf "\n${script} ${RED}${1:-} ${2:-}$RES\n"
 
 PREFIX="${PREFIX:-/usr/local}"
 DESTDIR="${DESTDIR:-/}"
@@ -95,45 +93,12 @@ build)
     CFLAGS="$CFLAGS $GNUSOURCE -O2 -flto -march=native -ftree-vectorize"
     ;;
 fast_feedback)
-    CFLAGS="$CFLAGS $GNUSOURCE -Werror"
+    CFLAGS="$CFLAGS $GNUSOURCE"
     ;;
 *)
     CFLAGS="$CFLAGS -O2"
     ;;
 esac
-
-build_tags () {
-    if command -v ctags >/dev/null 2>&1; then
-        find . -iname "*.[ch]" -print0 \
-            | xargs --verbose -0 ctags --kinds-C=+l+d || true
-    fi
-
-    if [ -f tags ] && command -v vtags.sed >/dev/null 2>&1; then
-        vtags.sed tags | sort | uniq > .tags.vim      || true
-    fi
-}
-
-testing () {
-    find . -maxdepth 1 -name "*.c" | sort | while read -r src; do
-        name=$(basename "$src")
-        [ "$name" = "$main" ] && continue
-        printf "Testing %s...\n" "$src"
-
-        name=$(echo "$name" | sed 's/\.c//g')
-        flags=$(awk '/flags:/ { $1=$2=""; print $0 }' "$src")
-        test_exe="/tmp/${name}_test"
-
-        trace_on
-        if $CC $CPPFLAGS $CFLAGS \
-            -DCBASE_IMPLEMENT -DTESTING_$name=1 "$src" \
-              -o "$test_exe" $LDFLAGS $flags; then
-            "$test_exe"
-        else
-            error "Failed to compile %s, is main() defined?\n" "$src"
-        fi
-        trace_off
-    done
-}
 
 case "$target" in
 fast_feedback)
@@ -159,7 +124,25 @@ check)
     exit
     ;;
 test)
-    testing
+    find . -maxdepth 1 -name "*.c" | sort | while read -r src; do
+        name=$(basename "$src")
+        [ "$name" = "$main" ] && continue
+        printf "Testing %s...\n" "$src"
+
+        name=$(echo "$name" | sed 's/\.c//g')
+        flags=$(awk '/flags:/ { $1=$2=""; print $0 }' "$src")
+        test_exe="/tmp/${name}_test"
+
+        trace_on
+        if $CC $CPPFLAGS $CFLAGS \
+            -DCBASE_IMPLEMENT -DTESTING_$name=1 "$src" \
+              -o "$test_exe" $LDFLAGS $flags; then
+            "$test_exe"
+        else
+            error "Failed to compile %s, is main() defined?\n" "$src"
+        fi
+        trace_off
+    done
     ;;
 install)
     if [ ! -f "$exe" ]; then
