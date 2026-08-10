@@ -22,7 +22,6 @@ mkdir -p "$(dirname "$exe")"
 CC=$(get_compiler "$target")
 
 CPPFLAGS="$CPPFLAGS -I$dir/cbase"
-CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700"
 
 CFLAGS="$CFLAGS -std=c11"
 CFLAGS="$CFLAGS -Wfatal-errors"
@@ -51,29 +50,20 @@ fi
 
 LDFLAGS="$LDFLAGS -lm"
 
-OS=$(uname -a)
-GNUSOURCE=
-if echo "$OS" | grep -q "Linux"; then
-    if echo "$OS" | grep -q "GNU"; then
-        GNUSOURCE="-D_GNU_SOURCE"
-    fi
-fi
-
 case "$target" in
 debug)
     CFLAGS="$CFLAGS -g3 -O0 -fsanitize=undefined"
-    CPPFLAGS="$CPPFLAGS $GNUSOURCE -DDEBUGGING=1"
+    CPPFLAGS="$CPPFLAGS -DDEBUGGING=1"
     exe="bin/${program}_debug"
     ;;
 test)
-    CFLAGS="$CFLAGS -g3 -O0 $GNUSOURCE -DDEBUGGING=1"
+    CFLAGS="$CFLAGS -g3 -O0 -DDEBUGGING=1"
     CFLAGS="$CFLAGS -fsanitize=undefined"
     ;;
 build)
-    CFLAGS="$CFLAGS $GNUSOURCE -O2 -flto -march=native -ftree-vectorize"
+    CFLAGS="$CFLAGS -O2 -flto -march=native -ftree-vectorize"
     ;;
 fast_feedback)
-    CFLAGS="$CFLAGS $GNUSOURCE"
     ;;
 *)
     CFLAGS="$CFLAGS -O2"
