@@ -104,25 +104,9 @@ check)
     exit
     ;;
 test)
-    find . -maxdepth 1 -name "*.c" | sort | while read -r src; do
-        name=$(basename "$src")
-        [ "$name" = "main.c" ] && continue
-        printf "Testing %s...\n" "$src"
-
-        name=$(echo "$name" | sed 's/\.c//g')
-        flags=$(awk '/flags:/ { $1=$2=""; print $0 }' "$src")
-        test_exe="/tmp/${name}_test"
-
-        trace_on
-        if $CC $CPPFLAGS $CFLAGS \
-            -DCBASE_IMPLEMENT -DTESTING_$name=1 "$src" \
-              -o "$test_exe" $LDFLAGS $flags; then
-            "$test_exe"
-        else
-            error "Failed to compile %s, is main() defined?\n" "$src"
-        fi
-        trace_off
-    done
+    TEST_EXTRA_DEFS=-DCBASE_IMPLEMENT \
+    TEST_MAXDEPTH=1 \
+        test "$2" .
     ;;
 install)
     if [ ! -f "$exe" ]; then
