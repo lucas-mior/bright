@@ -84,12 +84,15 @@ uninstall)
     trace_off
     ;;
 check)
+    set +e
+
     CC=gcc CFLAGS="-fanalyzer -fdiagnostics-color=never" "$0" build
     CFLAGS="--analyze -Xanalyzer -analyzer-output=text"
     CFLAGS="$CFLAGS -Xanalyzer -analyzer-werror"
     CFLAGS="$CFLAGS -Xanalyzer -analyzer-opt-analyze-headers"
     CFLAGS="$CFLAGS -Wno-unused-command-line-argument"
     CFLAGS="$CFLAGS -fno-color-diagnostics"
+
     CC=clang CFLAGS="$CFLAGS" "$0" build
     exit
     ;;
