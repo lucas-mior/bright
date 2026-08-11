@@ -52,12 +52,12 @@ LDFLAGS="$LDFLAGS -lm"
 
 case "$target" in
 debug)
-    CFLAGS="$CFLAGS -g3 -O0 -fsanitize=undefined"
+    CFLAGS="$CFLAGS -g3 -Og -fsanitize=undefined"
     CPPFLAGS="$CPPFLAGS -DDEBUGGING=1"
     exe="bin/${program}_debug"
     ;;
 test)
-    CFLAGS="$CFLAGS -g3 -O0 -DDEBUGGING=1"
+    CFLAGS="$CFLAGS -g3 -Og -DDEBUGGING=1"
     CFLAGS="$CFLAGS -fsanitize=undefined"
     ;;
 build)
