@@ -40,7 +40,7 @@ static const struct BrightCommand commands[] = {
 #endif
 
 static bool get_bright(Brightness *);
-static void main_usage(FILE *) __attribute__((noreturn));
+static noreturn void main_usage(FILE *);
 
 static int32 levels[NLEVELS + 1];
 static const char *bright_directory = "/sys/class/backlight/intel_backlight";

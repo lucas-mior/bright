@@ -5,3 +5,4 @@ compile_commands.json
 *.o
 *.tar.gz
 *temp_delete_me*
+*.obj
