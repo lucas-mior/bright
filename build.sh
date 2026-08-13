@@ -53,13 +53,12 @@ LDFLAGS="$LDFLAGS -lm"
 
 case "$mode" in
 debug)
-    CFLAGS="$CFLAGS -g3 -Og -fsanitize=undefined"
+    CFLAGS="$CFLAGS -g3 -Og"
     CPPFLAGS="$CPPFLAGS -DDEBUGGING=1"
     exe="bin/${program}_debug"
     ;;
 test)
     CFLAGS="$CFLAGS -g3 -Og -DDEBUGGING=1"
-    CFLAGS="$CFLAGS -fsanitize=undefined"
     ;;
 build)
     CFLAGS="$CFLAGS -O2 -flto -march=native -ftree-vectorize"
