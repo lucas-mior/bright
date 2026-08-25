@@ -182,7 +182,10 @@ out:
             XFCLOSE(save, new_bright.file);
             exit(EXIT_FAILURE);
         }
-        XFCLOSE(save, new_bright.file);
+        if (XFCLOSE(save, new_bright.file) < 0) {
+            new_bright.index = old_bright.index;
+            exit(EXIT_FAILURE);
+        }
     }
 
     if (program_to_signal) {
