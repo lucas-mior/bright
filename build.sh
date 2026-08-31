@@ -58,7 +58,6 @@ cross)
     common_build_cross_all windows
     cross="$target"
 
-    CFLAGS="$CFLAGS -Wno-padded"
     CFLAGS="$CFLAGS -target $cross"
 
     case "$cross" in
