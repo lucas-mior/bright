@@ -36,7 +36,7 @@ static const struct BrightCommand commands[] = {
 
 #if !defined(SNPRINTF)
 #define SNPRINTF(BUFFER, FORMAT, ...) \
-    snprintf2(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
+    fmt_sprintf(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
 #endif
 
 static bool get_bright(Brightness *);
