@@ -34,11 +34,6 @@ static const struct BrightCommand commands[] = {
 
 #define NLEVELS 11
 
-#if !defined(SNPRINTF)
-#define SNPRINTF(BUFFER, FORMAT, ...) \
-    fmt_sprintf(BUFFER, sizeof(BUFFER), FORMAT, __VA_ARGS__)
-#endif
-
 static bool get_bright(Brightness *);
 static noreturn void main_usage(FILE *);
 
