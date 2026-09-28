@@ -144,7 +144,7 @@ out:
 
     switch (ic) {
     case COMMAND_PRINT:
-        printf("🔆 %i", old_bright.index);
+        printf("🔆 %d", old_bright.index);
         exit(EXIT_SUCCESS);
     case COMMAND_LESS:
         if (0 < old_bright.index) {
