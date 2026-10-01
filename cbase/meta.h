@@ -246,7 +246,7 @@ enum TokenizeFlags {
 };
 
 enum CUnaryOp {
-    C_UNARY_OP_PLUS,
+    C_UNARY_OP_PLUS = 1,
     C_UNARY_OP_MINUS,
     C_UNARY_OP_LOGICAL_NOT,
     C_UNARY_OP_BIT_NOT,
@@ -307,7 +307,6 @@ enum CUnaryOp c_token_unary_op(Token *);
 enum CUnaryOp c_token_postfix_unary_op(Token *);
 enum CMemberOp c_member_op_from_text(char *, int32);
 enum CMemberOp c_token_member_op(Token *);
-enum CKeyword c_keyword_from_text(char *, int32);
 enum CKeyword c_token_keyword(Token *);
 bool c_text_is_type_qualifier(char *, int32);
 bool c_text_is_type_word(char *, int32);
