@@ -11,11 +11,11 @@ typedef struct Brightness {
 } Brightness;
 
 enum {
-    COMMAND_MORE = 0,
-    COMMAND_LESS,
-    COMMAND_FULL,
-    COMMAND_HELP,
-    COMMAND_PRINT,
+    CMD_MORE = 0,
+    CMD_LESS,
+    CMD_FULL,
+    CMD_HELP,
+    CMD_PRINT,
 };
 
 struct BrightCommand {
@@ -25,11 +25,11 @@ struct BrightCommand {
 };
 
 static const struct BrightCommand commands[] = {
-    [COMMAND_MORE] =  {"-m", "--more",  "more brightness"},
-    [COMMAND_LESS] =  {"-l", "--less",  "less brightness"},
-    [COMMAND_FULL] =  {"-f", "--full",  "full brightness"},
-    [COMMAND_PRINT] = {"-p", "--print", "print current brightness"},
-    [COMMAND_HELP] =  {"-h", "--help",  "print this help message"},
+    [CMD_MORE] =  {"-m", "--more",  "more brightness"},
+    [CMD_LESS] =  {"-l", "--less",  "less brightness"},
+    [CMD_FULL] =  {"-f", "--full",  "full brightness"},
+    [CMD_PRINT] = {"-p", "--print", "print current brightness"},
+    [CMD_HELP] =  {"-h", "--help",  "print this help message"},
 };
 
 #define NLEVELS 11
@@ -51,7 +51,7 @@ main(int32 argc, char *argv[]) {
     program = argv[0];
 
     if (argc <= 1) {
-        ic = COMMAND_FULL;
+        ic = CMD_FULL;
         goto out;
     }
     if (argc > 3) {
@@ -62,12 +62,12 @@ main(int32 argc, char *argv[]) {
         if (strequal(argv[1], commands[ic].shortname)
             || strequal(argv[1], commands[ic].longname)) {
             switch (ic) {
-            case COMMAND_MORE:
-            case COMMAND_LESS:
-            case COMMAND_PRINT:
-            case COMMAND_FULL:
+            case CMD_MORE:
+            case CMD_LESS:
+            case CMD_PRINT:
+            case CMD_FULL:
                 goto out;
-            case COMMAND_HELP:
+            case CMD_HELP:
                 main_usage(stdout);
             default:
                 main_usage(stderr);
@@ -143,20 +143,20 @@ out:
     new_bright.index = old_bright.index;
 
     switch (ic) {
-    case COMMAND_PRINT:
+    case CMD_PRINT:
         printf("🔆 %d", old_bright.index);
         exit(EXIT_SUCCESS);
-    case COMMAND_LESS:
+    case CMD_LESS:
         if (0 < old_bright.index) {
             new_bright.index -= 1;
         }
         break;
-    case COMMAND_MORE:
+    case CMD_MORE:
         if (old_bright.index < NLEVELS - 1) {
             new_bright.index += 1;
         }
         break;
-    case COMMAND_FULL:
+    case CMD_FULL:
         new_bright.index = NLEVELS - 1;
         break;
     default:
