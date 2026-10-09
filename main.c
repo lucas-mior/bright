@@ -239,7 +239,9 @@ main_usage(FILE *stream) {
     fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
     fprintf(stream, "Available commands:\n");
     for (uint i = 0; i < LENGTH(commands); i += 1) {
-        fprintf(stream, "%s | %-*s : %s\n", commands[i].shortname, 8,
+        fprintf(stream,
+                "%s | %-*s : %s\n",
+                commands[i].shortname, 8,
                 commands[i].longname, commands[i].description);
     }
     exit(stream != stdout);
