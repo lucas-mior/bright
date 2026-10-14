@@ -215,7 +215,7 @@ get_bright(Brightness *bright) {
         return false;
     }
 
-    if ((r = read64(file, buffer, sizeof(buffer))) <= 0) {
+    if ((r = read64(file, buffer, SIZEOF(buffer))) <= 0) {
         error("Error reading from file");
         if (r < 0) {
             error(": %s", strerror(errno));
