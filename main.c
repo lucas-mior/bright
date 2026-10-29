@@ -144,7 +144,7 @@ out:
 
     switch (ic) {
     case CMD_PRINT:
-        printf("🔆 %d", old_bright.index);
+        fmt_printf("🔆 %d", old_bright.index);
         exit(EXIT_SUCCESS);
     case CMD_LESS:
         if (0 < old_bright.index) {
@@ -171,7 +171,7 @@ out:
                   strerror(errno));
             exit(EXIT_FAILURE);
         }
-        if (fprintf(save, "%d\n", levels[new_bright.index]) < 0) {
+        if (fmt_fprintf(save, "%d\n", levels[new_bright.index]) < 0) {
             error("Error writing to file: %s.\n", strerror(errno));
             new_bright.index = old_bright.index;
             XFCLOSE(save, new_bright.file);
@@ -236,13 +236,13 @@ get_bright(Brightness *bright) {
 
 void
 main_usage(FILE *stream) {
-    fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
-    fprintf(stream, "Available commands:\n");
+    fmt_fprintf(stream, "usage: %s COMMAND [program_to_signal]\n", "bright");
+    fmt_fprintf(stream, "Available commands:\n");
     for (uint i = 0; i < LENGTH(commands); i += 1) {
-        fprintf(stream,
-                "%s | %-*s : %s\n",
-                commands[i].shortname, 8,
-                commands[i].longname, commands[i].description);
+        fmt_fprintf(stream,
+                    "%s | %-*s : %s\n",
+                    commands[i].shortname, 8,
+                    commands[i].longname, commands[i].description);
     }
     exit(stream != stdout);
 }
